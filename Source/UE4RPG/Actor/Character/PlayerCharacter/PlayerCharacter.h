@@ -16,10 +16,16 @@ private :
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	class UZoomableSpringArmComponent* SpringArm;
 
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	class UCharacterMovementHelperComponent * CharacterMovementHelper;
+
 public :
 	APlayerCharacter();
 	
 public :
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+public :
+	FORCEINLINE class UCharacterMovementHelperComponent* GetCharacterMovementHelper() const
+	{ return CharacterMovementHelper; }
 };
