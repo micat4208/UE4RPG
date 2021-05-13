@@ -1,4 +1,7 @@
 #include "PlayerCharacter.h"
+
+#include "AnimInstance/PlayerCharacterAnimInst/PlayerCharacterAnimInst.h"
+
 #include "Component/ZoomableSpringArm/ZoomableSpringArmComponent.h"
 #include "Component/CharacterMovementHelper/CharacterMovementHelperComponent.h"
 
@@ -7,6 +10,10 @@ APlayerCharacter::APlayerCharacter()
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SK_FEMALE_BASE(
 		TEXT("SkeletalMesh'/Game/Resources/Character/GhostLady_S1/Meshes/Characters/Combines/SK_FemaleBase.SK_FemaleBase'"));
 	if (SK_FEMALE_BASE.Succeeded()) GetMesh()->SetSkeletalMesh(SK_FEMALE_BASE.Object);
+
+	static ConstructorHelpers::FClassFinder<UPlayerCharacterAnimInst> BP_PLAYER_CHARACTER(
+		TEXT("AnimBlueprint'/Game/Blueprints/AnimInstance/PlayerCharacter/BP_PlayerCharacter.BP_PlayerCharacter_C'"));
+	if (BP_PLAYER_CHARACTER.Succeeded()) BP_PlayerCharacter = BP_PLAYER_CHARACTER.Class;
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("CAMERA_COMPONENT"));
 	SpringArm = CreateDefaultSubobject<UZoomableSpringArmComponent>(TEXT("SPRING_ARM_COMPONENT"));
@@ -27,6 +34,8 @@ APlayerCharacter::APlayerCharacter()
 		FVector::DownVector * 88.0f,
 		FRotator(0.0f, -90.0f, 0.0));
 
+	GetMesh()->SetAnimInstanceClass(BP_PlayerCharacter);
+
 	// Pawn 의 회전이 컨트롤러의 Yaw 회전을 따르지 않도록 합니다.
 	bUseControllerRotationYaw = false;
 
@@ -42,6 +51,11 @@ APlayerCharacter::APlayerCharacter()
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	PlayerInputComponent->BindAction(TEXT("Run"), EInputEvent::IE_Pressed,
+		CharacterMovementHelper, &UCharacterMovementHelperComponent::RunKeyPressed);
+	PlayerInputComponent->BindAction(TEXT("Run"), EInputEvent::IE_Released,
+		CharacterMovementHelper, &UCharacterMovementHelperComponent::RunKeyReleased);
 
 	PlayerInputComponent->BindAxis(TEXT("MouseWheel"), SpringArm, &UZoomableSpringArmComponent::ZoomCamera);
 

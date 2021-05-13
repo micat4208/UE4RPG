@@ -6,12 +6,18 @@ UCharacterMovementHelperComponent::UCharacterMovementHelperComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 
-	PlayerCharacter = Cast<APlayerCharacter>(GetOwner());
 }
 
 void UCharacterMovementHelperComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	PlayerCharacter = Cast<APlayerCharacter>(GetOwner());
+	MovementComponent = PlayerCharacter->GetCharacterMovement();
+
+	WalkSpeed = 300.0f;
+	RunSpeed = 600.0f;
+	RunKeyReleased();
 }
 
 void UCharacterMovementHelperComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -42,3 +48,12 @@ void UCharacterMovementHelperComponent::InputVertical(float axis)
 	PlayerCharacter->AddMovementInput(forwardVector, axis);
 }
 
+void UCharacterMovementHelperComponent::RunKeyPressed()
+{
+	MovementComponent->MaxWalkSpeed = RunSpeed;
+}
+
+void UCharacterMovementHelperComponent::RunKeyReleased()
+{
+	MovementComponent->MaxWalkSpeed = WalkSpeed;
+}

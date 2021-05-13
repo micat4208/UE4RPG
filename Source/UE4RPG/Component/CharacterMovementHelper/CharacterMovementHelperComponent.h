@@ -12,6 +12,13 @@ class UE4RPG_API UCharacterMovementHelperComponent final :
 
 private :
 	class APlayerCharacter* PlayerCharacter;
+	class UCharacterMovementComponent* MovementComponent;
+
+	float WalkSpeed;
+	float RunSpeed;
+
+
+
 
 public:	
 	UCharacterMovementHelperComponent();
@@ -27,4 +34,7 @@ public :
 	void InputHorizontal(float axis);
 	void InputVertical(float axis);
 		
+	void RunKeyPressed();
+	void RunKeyReleased();
+
 };

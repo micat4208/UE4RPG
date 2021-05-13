@@ -10,6 +10,10 @@ class UE4RPG_API APlayerCharacter : public ABaseCharacter
 	GENERATED_BODY()
 
 private :
+	TSubclassOf<class UPlayerCharacterAnimInst> BP_PlayerCharacter;
+
+
+private :
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* Camera;
 
