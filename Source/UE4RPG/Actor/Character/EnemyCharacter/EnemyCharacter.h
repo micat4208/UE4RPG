@@ -15,6 +15,7 @@ class UE4RPG_API AEnemyCharacter :
 
 private:
 	class UDataTable* DT_EnemyInfo;
+	class UBehaviorTree* BehaviorTree;
 
 public :
 	// 적 캐릭터 코드

@@ -1,8 +1,12 @@
 #include "EnemyCharacter.h"
 
+#include "Actor/Controller/EnemyController/EnemyController.h"
+
 #include "Single/GameInstance/RPGGameInstance.h"
 
 #include "Engine/DataTable.h"
+
+#include "BehaviorTree/BehaviorTree.h"
 
 
 AEnemyCharacter::AEnemyCharacter()
@@ -12,6 +16,9 @@ AEnemyCharacter::AEnemyCharacter()
 	if (DT_ENEMY_INFO.Succeeded()) DT_EnemyInfo = DT_ENEMY_INFO.Object;
 
 	EnemyCode = FName(TEXT("1000"));
+
+	// 사용하는 AI Controller 를 설정합니다.
+	AIControllerClass = AEnemyController::StaticClass();
 
 }
 
@@ -45,4 +52,21 @@ void AEnemyCharacter::InitializeEnemyCharacter()
 
 	GetMesh()->SetSkeletalMesh(skeletalMesh);
 
+	GetMesh()->SetRelativeLocationAndRotation(
+		FVector::DownVector * 88.0f,
+		FRotator(0.0f, -90.0f, 0.0f));
+
+	// BehaviorTree 설정
+	BehaviorTree = Cast<UBehaviorTree>(
+		GetManager(FStreamableManager)->LoadSynchronous(EnemyInfo->UseBehaviorTreeAssetPath));
+
+	// 애님 인스턴스 클래스 설정
+	GetMesh()->SetAnimInstanceClass(EnemyInfo->AnimClass);
+
+	// Behavior Tree Run!
+	if (IsValid(BehaviorTree))
+	{
+		LOG(TEXT("IsValid(BehaviorTree)"));
+		Cast<AEnemyController>(GetController())->RunBehaviorTree(BehaviorTree);
+	}
 }
