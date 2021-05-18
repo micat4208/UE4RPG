@@ -20,6 +20,10 @@ AEnemyCharacter::AEnemyCharacter()
 	// 사용하는 AI Controller 를 설정합니다.
 	AIControllerClass = AEnemyController::StaticClass();
 
+	// Collision Presets 의 값을 설정합니다.
+	GetCapsuleComponent()->SetCollisionProfileName(TEXT("EnemyCharacter"));
+	GetMesh()->SetCollisionProfileName(TEXT("NoCollision"));
+
 }
 
 void AEnemyCharacter::BeginPlay()
@@ -56,6 +60,13 @@ void AEnemyCharacter::InitializeEnemyCharacter()
 		FVector::DownVector * 88.0f,
 		FRotator(0.0f, -90.0f, 0.0f));
 
+	// 최대 이동 속력 설정
+	GetCharacterMovement()->MaxWalkSpeed = EnemyInfo->MaxMoveSpeed;
+
+	// 캡슐 크기 설정
+	GetCapsuleComponent()->SetCapsuleHalfHeight(EnemyInfo->CapsuleHalfHeight);
+	GetCapsuleComponent()->SetCapsuleRadius(EnemyInfo->CapsuleRadius);
+
 	// BehaviorTree 설정
 	BehaviorTree = Cast<UBehaviorTree>(
 		GetManager(FStreamableManager)->LoadSynchronous(EnemyInfo->UseBehaviorTreeAssetPath));
@@ -66,7 +77,6 @@ void AEnemyCharacter::InitializeEnemyCharacter()
 	// Behavior Tree Run!
 	if (IsValid(BehaviorTree))
 	{
-		LOG(TEXT("IsValid(BehaviorTree)"));
 		Cast<AEnemyController>(GetController())->RunBehaviorTree(BehaviorTree);
 	}
 }

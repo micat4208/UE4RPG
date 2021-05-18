@@ -23,6 +23,10 @@ private :
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	class UCharacterMovementHelperComponent * CharacterMovementHelper;
 
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	class UPlayerInteractComponent * PlayerInteract;
+
+
 public :
 	APlayerCharacter();
 	
@@ -32,4 +36,9 @@ public :
 public :
 	FORCEINLINE class UCharacterMovementHelperComponent* GetCharacterMovementHelper() const
 	{ return CharacterMovementHelper; }
+
+	FORCEINLINE class UPlayerInteractComponent* GetPlayerInteract() const
+	{ return PlayerInteract; }
+
+
 };

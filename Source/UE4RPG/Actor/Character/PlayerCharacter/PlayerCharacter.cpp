@@ -4,6 +4,7 @@
 
 #include "Component/ZoomableSpringArm/ZoomableSpringArmComponent.h"
 #include "Component/CharacterMovementHelper/CharacterMovementHelperComponent.h"
+#include "Component/PlayerInteract/PlayerInteractComponent.h"
 
 APlayerCharacter::APlayerCharacter()
 {
@@ -18,7 +19,8 @@ APlayerCharacter::APlayerCharacter()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("CAMERA_COMPONENT"));
 	SpringArm = CreateDefaultSubobject<UZoomableSpringArmComponent>(TEXT("SPRING_ARM_COMPONENT"));
 	CharacterMovementHelper = CreateDefaultSubobject<UCharacterMovementHelperComponent>(TEXT("CHARACTER_MOVEMENT_HELPER"));
-	
+	PlayerInteract = CreateDefaultSubobject<UPlayerInteractComponent>(TEXT("PLAYER_INTERACT_COMPONENT"));
+
 	SpringArm->SetupAttachment(GetRootComponent());
 	Camera->SetupAttachment(SpringArm);
 
