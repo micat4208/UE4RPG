@@ -59,6 +59,9 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAction(TEXT("Run"), EInputEvent::IE_Released,
 		CharacterMovementHelper, &UCharacterMovementHelperComponent::RunKeyReleased);
 
+	PlayerInputComponent->BindAction(TEXT("Interact"), EInputEvent::IE_Pressed,
+		PlayerInteract, &UPlayerInteractComponent::TryInteraction);
+
 	PlayerInputComponent->BindAxis(TEXT("MouseWheel"), SpringArm, &UZoomableSpringArmComponent::ZoomCamera);
 
 	PlayerInputComponent->BindAxis(TEXT("Horizontal"), 

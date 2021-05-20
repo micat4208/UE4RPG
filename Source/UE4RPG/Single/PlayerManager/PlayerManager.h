@@ -4,6 +4,11 @@
 #include "Single/ManagerClass/ManagerClass.h"
 #include "PlayerManager.generated.h"
 
+#ifndef PLAYER_ACTOR_TAG
+#define PLAYER_ACTOR_TAG	TEXT("PlayerCharacter")
+#endif
+
+
 UCLASS()
 class UE4RPG_API UPlayerManager final : 
 	public UManagerClass

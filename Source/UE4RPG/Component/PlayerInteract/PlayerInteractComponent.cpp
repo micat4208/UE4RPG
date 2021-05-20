@@ -29,3 +29,11 @@ void UPlayerInteractComponent::RemoveInteractable(UInteractableAreaComponent* re
 		InteractableComponents.Remove(removeInteractable);
 }
 
+void UPlayerInteractComponent::TryInteraction()
+{
+	// 상호작용 가능한 객체가 존재하지 않을 경우 실행 X
+	if (InteractableComponents.Num() < 1) return;
+
+	// 플레이어 캐릭터와 가장 가까운 객체와 상호작용을 시작합니다.
+	InteractableComponents[0]->StartInteract();
+}
