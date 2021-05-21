@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CoreMinimal.h"
+#include "UE4RPG.h"
 #include "GameFramework/PlayerController.h"
 #include "BasePlayerController.generated.h"
 
@@ -10,7 +10,21 @@ class UE4RPG_API ABasePlayerController :
 {
 	GENERATED_BODY()
 
+private :
+	TSubclassOf<class UWidgetController> BP_WidgetController;
+
+private :
+	class UWidgetController* WidgetController;
+
+public :
+	ABasePlayerController();
+
 protected :
 	virtual void OnPossess(APawn* aPawn) override;
+
+public :
+	FORCEINLINE class UWidgetController* GetWidgetController() const
+	{ return WidgetController; }
+
 	
 };
