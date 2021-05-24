@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CoreMinimal.h"
+#include "UE4RPG.h"
 #include "Actor/Character/BaseCharacter.h"
 #include "BaseNpc.generated.h"
 
@@ -10,11 +10,17 @@ class UE4RPG_API ABaseNpc :
 {
 	GENERATED_BODY()
 
+private :
+	TSubclassOf<class UNpcDialogWidget> BP_NpcDialog;
+
 protected :
 	UPROPERTY(VisibleAnywhere)
 	class UInteractableAreaComponent* InteractableArea;
 
 public :
 	ABaseNpc();
+
+protected :
+	virtual void BeginPlay() override;
 	
 };
