@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Struct/NpcDialogInfo/NpcDialogInfo.h"
 #include "NpcDialogWidget.generated.h"
 
 UCLASS()
@@ -10,7 +11,23 @@ class UE4RPG_API UNpcDialogWidget final :
 {
 	GENERATED_BODY()
 
+public :
+	class ABaseNpc* ConnectedNpc;
+
 private :
+	// 표시되는 대화 정보를 나타냅니다.
+	FNpcDialogInfo DialogInfo;
+
+	// 현재 표시되는 대화 내용 인덱스를 나타냅니다.
+	int32 CurrentDialogIndex;
+
+	// 마지막 대화임을 나타냅니다.
+	bool bIsLastDialog;
+
+private :
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock * Text_NpcName;
+
 #pragma region Button Panel
 
 	UPROPERTY(meta = (BindWidget))
@@ -27,15 +44,43 @@ private :
 
 #pragma endregion
 
+
+
+
+#pragma region Dialog Panel
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock * Text_Dialog;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton * Button_Next;
+
+#pragma endregion
+
 protected :
 	virtual void NativeConstruct() override;
 
+private :
+	// 지정한 순서의 대화를 표시합니다.
+	void ShowDialog(int32 newDialogIndex);
+
+	void SetButtonVisibility(class UButton* button, bool bVisible);
+
+
 #pragma region Button Events
 
+public :
+	void InitializeDialog();
+
 private :
+	UFUNCTION()
+	void OnNextDialogButtonClicked();
+
 	UFUNCTION()
 	void OnExitButtonClicked();
 
 #pragma endregion
+
+
 	
 };
