@@ -15,9 +15,27 @@ void UNpcDialogWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	// 이 위젯이 포커싱을 지원하도록 합니다.
+	bIsFocusable = true;
+
+	// 키보드 포커싱을 설정합니다.
+	SetKeyboardFocus();
+
 	Button_Exit->OnClicked.AddDynamic(this, &UNpcDialogWidget::OnExitButtonClicked);
 
 	Button_Next->OnClicked.AddDynamic(this, &UNpcDialogWidget::OnNextDialogButtonClicked);
+}
+
+FReply UNpcDialogWidget::NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
+{
+	// R 키 입력 시
+	if (InKeyEvent.GetKey() == EKeys::R)
+	{
+		// 다음 대화 내용을 표시합니다.
+		OnNextDialogButtonClicked();
+		return FReply::Handled();
+	}
+	else return Super::NativeOnKeyDown(InGeometry, InKeyEvent);
 }
 
 void UNpcDialogWidget::ShowDialog(int32 newDialogIndex)

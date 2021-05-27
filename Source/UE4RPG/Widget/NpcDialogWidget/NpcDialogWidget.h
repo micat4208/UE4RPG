@@ -59,6 +59,7 @@ private :
 
 protected :
 	virtual void NativeConstruct() override;
+	virtual FReply NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
 
 private :
 	// 지정한 순서의 대화를 표시합니다.
