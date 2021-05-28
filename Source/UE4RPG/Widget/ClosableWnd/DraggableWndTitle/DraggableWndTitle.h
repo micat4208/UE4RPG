@@ -46,6 +46,9 @@ public :
 	FORCEINLINE void SetDragTarget(class UClosableWnd* targetWnd)
 	{ TargetWnd = targetWnd; }
 
+	FORCEINLINE class UButton* GetCloseButton() const
+	{ return Button_Close; }
+
 private :
 	void DragWidget();
 

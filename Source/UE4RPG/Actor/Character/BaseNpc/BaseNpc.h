@@ -13,8 +13,10 @@ class UE4RPG_API ABaseNpc :
 
 private :
 	TSubclassOf<class UNpcDialogWidget> BP_NpcDialog;
-	class UDataTable* DT_NpcInfo;
 
+	TSubclassOf<class UClosableWnd> BP_ClosableWnd;
+
+	class UDataTable* DT_NpcInfo;
 protected :
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Npc Code")
 	FName NpcCode;
