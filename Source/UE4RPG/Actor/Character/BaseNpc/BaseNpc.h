@@ -14,7 +14,6 @@ class UE4RPG_API ABaseNpc :
 private :
 	TSubclassOf<class UNpcDialogWidget> BP_NpcDialog;
 
-	TSubclassOf<class UClosableWnd> BP_ClosableWnd;
 
 	class UDataTable* DT_NpcInfo;
 protected :

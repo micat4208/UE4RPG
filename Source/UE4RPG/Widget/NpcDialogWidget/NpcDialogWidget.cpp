@@ -7,9 +7,18 @@
 #include "Actor/Controller/PlayerController/BasePlayerController.h"
 
 #include "Widget/WidgetController/WidgetController.h"
+#include "Widget/ClosableWnd/NpcShopWnd/NpcShopWnd.h"
 
 #include "Components/TextBlock.h"
 #include "Components/Button.h"
+
+UNpcDialogWidget::UNpcDialogWidget(const FObjectInitializer& ObjectInitializer) : 
+	Super(ObjectInitializer)
+{
+	static ConstructorHelpers::FClassFinder<UNpcShopWnd> BP_NPC_SHOP_WND(
+		TEXT("WidgetBlueprint'/Game/Blueprints/Widget/ClosableWnd/NpcShopWnd/BP_NpcShopWnd.BP_NpcShopWnd_C'"));
+	if (BP_NPC_SHOP_WND.Succeeded()) BP_NpcShopWnd = BP_NPC_SHOP_WND.Class;
+}
 
 void UNpcDialogWidget::NativeConstruct()
 {
@@ -22,7 +31,7 @@ void UNpcDialogWidget::NativeConstruct()
 	SetKeyboardFocus();
 
 	Button_Exit->OnClicked.AddDynamic(this, &UNpcDialogWidget::OnExitButtonClicked);
-
+	Button_Shop->OnClicked.AddDynamic(this, &UNpcDialogWidget::OnShopButtonClicked);
 	Button_Next->OnClicked.AddDynamic(this, &UNpcDialogWidget::OnNextDialogButtonClicked);
 }
 
@@ -105,6 +114,11 @@ void UNpcDialogWidget::InitializeDialog()
 void UNpcDialogWidget::OnNextDialogButtonClicked()
 {
 	ShowDialog(++CurrentDialogIndex);
+}
+
+void UNpcDialogWidget::OnShopButtonClicked()
+{
+	GetManager(UPlayerManager)->GetPlayerController()->GetWidgetController()->CreateWnd(BP_NpcShopWnd, true);
 }
 
 void UNpcDialogWidget::OnExitButtonClicked()

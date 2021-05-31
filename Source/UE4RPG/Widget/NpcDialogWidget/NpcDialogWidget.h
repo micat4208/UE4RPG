@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CoreMinimal.h"
+#include "UE4RPG.h"
 #include "Blueprint/UserWidget.h"
 #include "Struct/NpcDialogInfo/NpcDialogInfo.h"
 #include "NpcDialogWidget.generated.h"
@@ -13,6 +13,7 @@ class UE4RPG_API UNpcDialogWidget final :
 
 public :
 	class ABaseNpc* ConnectedNpc;
+	TSubclassOf<class UNpcShopWnd> BP_NpcShopWnd;
 
 private :
 	// 표시되는 대화 정보를 나타냅니다.
@@ -57,6 +58,9 @@ private :
 
 #pragma endregion
 
+public :
+	UNpcDialogWidget(const FObjectInitializer& ObjectInitializer);
+
 protected :
 	virtual void NativeConstruct() override;
 	virtual FReply NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
@@ -76,6 +80,9 @@ public :
 private :
 	UFUNCTION()
 	void OnNextDialogButtonClicked();
+
+	UFUNCTION()
+	void OnShopButtonClicked();
 
 	UFUNCTION()
 	void OnExitButtonClicked();

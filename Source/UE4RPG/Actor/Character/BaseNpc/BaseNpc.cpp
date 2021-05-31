@@ -8,8 +8,6 @@
 #include "Widget/NpcDialogWidget/NpcDialogWidget.h"
 #include "Widget/WidgetController/WidgetController.h"
 
-#include "Widget/ClosableWnd/ClosableWnd.h"
-
 #include "Component/InteractableArea/InteractableAreaComponent.h"
 
 ABaseNpc::ABaseNpc()
@@ -27,9 +25,6 @@ ABaseNpc::ABaseNpc()
 	InteractableArea->SetupAttachment(GetRootComponent());
 	InteractableArea->SetSphereRadius(250.0f);
 
-	static ConstructorHelpers::FClassFinder<UClosableWnd> BP_CLOSABLE_WND(
-		TEXT("WidgetBlueprint'/Game/Blueprints/Widget/ClosableWnd/BP_ClosableWnd.BP_ClosableWnd_C'"));
-	if (BP_CLOSABLE_WND.Succeeded()) BP_ClosableWnd = BP_CLOSABLE_WND.Class;
 }
 
 void ABaseNpc::BeginPlay()
@@ -57,9 +52,6 @@ void ABaseNpc::BeginPlay()
 
 			// À§Á¬ ÃÊ±âÈ­
 			npcDialogWidget->InitializeDialog();
-
-			playerController->GetWidgetController()->CreateWnd(BP_ClosableWnd);
-
 		});
 
 }
