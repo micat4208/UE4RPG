@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
@@ -12,31 +12,37 @@ struct UE4RPG_API FItemInfo :
 	GENERATED_USTRUCT_BODY()
 
 public:
-	// ¾ÆÀÌÅÛ ÄÚµå
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "±âº»")
+	// ì•„ì´í…œ ì½”ë“œ
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ê¸°ë³¸")
 	FName ItemCode;
 
-	// ¾ÆÀÌÅÛ Å¸ÀÔ
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "±âº»")
+	// ì•„ì´í…œ íƒ€ì…
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ê¸°ë³¸")
 	EItemType ItemType;
 
-	// ¾ÆÀÌÅÛ ÀÌ¸§
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "±âº»")
+	// ì•„ì´í…œ ì´ë¦„
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ê¸°ë³¸")
 	FText ItemName;
 
-	// ¾ÆÀÌÅÛ ¼³¸í
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "±âº»")
+	// ì•„ì´í…œ ì„¤ëª…
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ê¸°ë³¸")
 	FText ItemDescription;
 
-	// ¾ÆÀÌÅÛ ÀÌ¹ÌÁö °æ·Î
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "±âº»")
+	// ì•„ì´í…œ ì´ë¯¸ì§€ ê²½ë¡œ
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ê¸°ë³¸")
 	FSoftObjectPath ItemImagePath;
 
-	// ½½·Ô¿¡ ´ãÀ» ¼ö ÀÖ´Â ÃÖ´ë ¾ÆÀÌÅÛ °³¼ö
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "±âº»")
+	// ìŠ¬ë¡¯ì— ë‹´ì„ ìˆ˜ ìˆëŠ” ìµœëŒ€ ì•„ì´í…œ ê°œìˆ˜
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ê¸°ë³¸")
 	int32 MaxSlotCount;
 
-	// ¾ÆÀÌÅÛ ÆÇ¸Å °¡°İ
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "±âº»")
+	// ì•„ì´í…œ íŒë§¤ ê°€ê²©
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ê¸°ë³¸")
 	int32 Price;
+
+public :
+	FItemInfo();
+
+	FORCEINLINE bool IsEmpty() const
+	{ return ItemCode.IsNone(); }
 };

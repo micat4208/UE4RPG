@@ -20,4 +20,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FNpcDialogInfo DefaultDialogInfo;
 
+	// 상점 코드
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName ShopCode;
+
+
 };

@@ -4,11 +4,17 @@
 #include "Blueprint/UserWidget.h"
 #include "ClosableWnd.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(FWndEventSignature)
+
 UCLASS()
 class UE4RPG_API UClosableWnd : 
 	public UUserWidget
 {
 	GENERATED_BODY()
+
+public :
+	// 창이 닫힐 때 발생하는 이벤트
+	FWndEventSignature OnWndClosed;
 
 public :
 	// Widget Controller

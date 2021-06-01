@@ -133,6 +133,10 @@ void UWidgetController::CloseWnd(bool bAllClose, UClosableWnd* closableWnd)
 			// 닫힘 처리되지 않은 창이라면
 			if (!wnd->bBeClose)
 			{
+				// 창 닫힘 이벤트
+				if (wnd->OnWndClosed.IsBound())
+					wnd->OnWndClosed.Broadcast();
+
 				// 창의 위치를 저장합니다.
 				SaveWndPosition(wnd);
 
@@ -158,6 +162,11 @@ void UWidgetController::CloseWnd(bool bAllClose, UClosableWnd* closableWnd)
 		// 닫힘 처리되지 않은 창이라면
 		if (!closableWnd->bBeClose)
 		{
+
+			// 창 닫힘 이벤트
+			if (closableWnd->OnWndClosed.IsBound())
+				closableWnd->OnWndClosed.Broadcast();
+
 			// 창의 위치를 저장합니다.
 			SaveWndPosition(closableWnd);
 

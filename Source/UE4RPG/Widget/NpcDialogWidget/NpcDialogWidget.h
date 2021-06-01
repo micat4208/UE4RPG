@@ -14,6 +14,10 @@ class UE4RPG_API UNpcDialogWidget final :
 public :
 	class ABaseNpc* ConnectedNpc;
 	TSubclassOf<class UNpcShopWnd> BP_NpcShopWnd;
+	class UDataTable* DT_ShopInfo;
+
+private : 
+	class UNpcShopWnd* NpcShopWnd;
 
 private :
 	// 표시되는 대화 정보를 나타냅니다.

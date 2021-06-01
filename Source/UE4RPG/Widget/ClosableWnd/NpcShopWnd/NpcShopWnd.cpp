@@ -8,3 +8,7 @@ void UNpcShopWnd::NativeConstruct()
 
 
 }
+
+void UNpcShopWnd::InitializeNpcShop(FShopInfo* shopInfo)
+{
+}

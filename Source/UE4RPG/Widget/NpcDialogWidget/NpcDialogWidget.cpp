@@ -12,12 +12,20 @@
 #include "Components/TextBlock.h"
 #include "Components/Button.h"
 
+#include "Struct/ShopInfo/ShopInfo.h"
+
 UNpcDialogWidget::UNpcDialogWidget(const FObjectInitializer& ObjectInitializer) : 
 	Super(ObjectInitializer)
 {
 	static ConstructorHelpers::FClassFinder<UNpcShopWnd> BP_NPC_SHOP_WND(
 		TEXT("WidgetBlueprint'/Game/Blueprints/Widget/ClosableWnd/NpcShopWnd/BP_NpcShopWnd.BP_NpcShopWnd_C'"));
 	if (BP_NPC_SHOP_WND.Succeeded()) BP_NpcShopWnd = BP_NPC_SHOP_WND.Class;
+
+	static ConstructorHelpers::FObjectFinder<UDataTable> DT_SHOP_INFO(
+		TEXT("DataTable'/Game/Resources/DataTable/DT_ShopInfo.DT_ShopInfo'"));
+	if (DT_SHOP_INFO.Succeeded()) DT_ShopInfo = DT_SHOP_INFO.Object;
+
+	NpcShopWnd = nullptr;
 }
 
 void UNpcDialogWidget::NativeConstruct()
@@ -118,7 +126,22 @@ void UNpcDialogWidget::OnNextDialogButtonClicked()
 
 void UNpcDialogWidget::OnShopButtonClicked()
 {
-	GetManager(UPlayerManager)->GetPlayerController()->GetWidgetController()->CreateWnd(BP_NpcShopWnd, true);
+	if (IsValid(NpcShopWnd)) return;
+
+	// 상점 정보를 얻습니다.
+	FString contextString;
+	FShopInfo* shopInfo = DT_ShopInfo->FindRow<FShopInfo>(
+		ConnectedNpc->GetNpcInfo()->ShopCode, contextString);
+
+	NpcShopWnd = Cast<UNpcShopWnd>(
+		GetManager(UPlayerManager)->GetPlayerController()->GetWidgetController()->
+		CreateWnd(BP_NpcShopWnd, true));
+
+	// Npc 상점 창 초기화
+	NpcShopWnd->InitializeNpcShop(shopInfo);
+
+	// 상점 창 닫힘 이벤트 설정
+	NpcShopWnd->OnWndClosed.AddLambda([this]() { NpcShopWnd = nullptr; });
 }
 
 void UNpcDialogWidget::OnExitButtonClicked()
