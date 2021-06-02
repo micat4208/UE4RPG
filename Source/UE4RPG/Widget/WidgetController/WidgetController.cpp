@@ -6,6 +6,7 @@
 
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
+#include "Components/GridSlot.h"
 
 
 
@@ -183,4 +184,26 @@ void UWidgetController::CloseWnd(bool bAllClose, UClosableWnd* closableWnd)
 	// 입력 모드 초기화
 	ResetInputMode();
 
+}
+
+void UWidgetController::SortGridPanelElem(
+	UUserWidget* gridPanelElem, 
+	int32 maxColumnCount, 
+	int32& ref_currentColumnCount)
+{
+	UGridSlot* gridSlot = Cast<UGridSlot>(gridPanelElem->Slot);
+
+	if (!IsValid(gridSlot))
+	{
+		UE_LOG(LogTemp, Error, 
+			TEXT("%s :: %d LINE :: gridPanelElem isn't located inside the Grid Panel!"), 
+			__CLSNAME__, __LINE__);
+		
+		return;
+	}
+
+	// 그리드 행과 열을 설정합니다.
+	gridSlot->SetColumn(ref_currentColumnCount % maxColumnCount);
+	gridSlot->SetRow(ref_currentColumnCount / maxColumnCount);
+	++ref_currentColumnCount;
 }

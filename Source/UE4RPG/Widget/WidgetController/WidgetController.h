@@ -90,6 +90,17 @@ public :
 	///   만약 nullptr 가 전달된다면 마지막에 열었던 창이 닫힙니다.
 	void CloseWnd(bool bAllClose = false, class UClosableWnd* closableWnd = nullptr);
 
+public :
+	// 그리드 패널의 요소들을 차례대로 정렬합니다.
+	/// - gridPanelElem : 정렬시킬 그리드 패널 요소를 전달합니다.
+	/// - maxColumnCount : 최대 행 개수를 전달합니다.
+	/// - ref_currentColumnCount : 현재 행 번호를 전달합니다.
+	///   전달한 변수는 메서드 내부에서 변경됩니다.
+	static void SortGridPanelElem(
+		class UUserWidget* gridPanelElem,
+		int32 maxColumnCount,
+		int32& ref_currentColumnCount);
+
 
 	
 };

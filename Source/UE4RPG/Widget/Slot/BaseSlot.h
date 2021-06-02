@@ -33,4 +33,10 @@ public :
 	// 슬롯을 초기화합니다.
 	virtual void InitializeSlot(ESlotType slotType, FName inCode);
 
+public :
+	FORCEINLINE class UImage* GetSlotImage() const
+	{ return Image_Slot; }
+
+	FORCEINLINE class UTextBlock* GetCountText() const
+	{ return Text_Count; }
 };
