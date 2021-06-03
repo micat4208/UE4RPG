@@ -1,6 +1,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "Single/PlayerManager/PlayerInventory/PlayerInventory.h"
 #include "Single/ManagerClass/ManagerClass.h"
 #include "PlayerManager.generated.h"
 
@@ -17,6 +19,9 @@ class UE4RPG_API UPlayerManager final :
 
 private :
 	UPROPERTY()
+	class UPlayerInventory* PlayerInventory;
+
+	UPROPERTY()
 	class ABasePlayerController* PlayerController;
 
 	UPROPERTY()
@@ -27,7 +32,13 @@ public :
 	void RegisterPlayer(class ABasePlayerController* newPlayerController,
 		class APlayerCharacter* newPlayerCharacter);
 
+	virtual void InitManagerClass() override;
+	virtual void ShutdownManagerClass() override;
+
 public :
+	FORCEINLINE class UPlayerInventory* GetPlayerInventory() const
+	{ return PlayerInventory; }
+
 	FORCEINLINE class ABasePlayerController* GetPlayerController() const
 	{ return PlayerController; }
 

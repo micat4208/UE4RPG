@@ -26,6 +26,9 @@ private :
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock * Text_ItemName;
 
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock * Text_Price;
+
 public :
 	void InitializeShopItemWidget(class UNpcShopWnd* npcShopWnd, FShopItemInfo shopItemInfo);
 	

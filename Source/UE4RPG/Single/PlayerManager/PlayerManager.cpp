@@ -1,5 +1,6 @@
 #include "PlayerManager.h"
 
+
 #include "Actor/Character/PlayerCharacter/PlayerCharacter.h"
 #include "Actor/Controller/PlayerController/BasePlayerController.h"
 
@@ -10,4 +11,21 @@ void UPlayerManager::RegisterPlayer(
 	PlayerController = newPlayerController;
 	(PlayerCharacter = newPlayerCharacter)->Tags.Add(PLAYER_ACTOR_TAG);
 
+}
+
+void UPlayerManager::InitManagerClass()
+{
+	PlayerInventory = NewObject<UPlayerInventory>(this, UPlayerInventory::StaticClass(),
+		NAME_None, EObjectFlags::RF_MarkAsRootSet);
+}
+
+void UPlayerManager::ShutdownManagerClass()
+{
+	// Release PlayerInventory
+	// 해당 객체가 GC 에 의해 해제된 객체인지 확인
+	if (!PlayerInventory->IsValidLowLevel()) return;
+
+	// 아니라면 객체 소멸
+	PlayerInventory->ConditionalBeginDestroy();
+	PlayerInventory = nullptr;
 }

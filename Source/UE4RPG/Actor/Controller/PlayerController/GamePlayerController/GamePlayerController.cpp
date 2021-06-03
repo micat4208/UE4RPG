@@ -1,8 +1,16 @@
 #include "GamePlayerController.h"
 
+#include "Single/GameInstance/RPGGameInstance.h"
+#include "Single/PlayerManager/PlayerManager.h"
+
+#include "Widget/WidgetController/WidgetController.h"
+
 void AGamePlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
+
+	InputComponent->BindAction(TEXT("OpenInventory"), EInputEvent::IE_Pressed,
+		this, &ThisClass::OpenInventory);
 
 	// MouseX, Y 입력 시 호출할 메서드를 바인딩시킵니다.
 	InputComponent->BindAxis(TEXT("MouseX"), this, &AGamePlayerController::MouseXInput);
@@ -23,4 +31,9 @@ void AGamePlayerController::MouseYInput(float axis)
 	/// - axis : 마우스를 위쪽으로 이동시킨다면 -1
 	/// -        마우스를 아래쪽으로 이동시킨다면 1
 	AddPitchInput(axis);
+}
+
+void AGamePlayerController::OpenInventory()
+{
+	GetManager(UPlayerManager)->GetPlayerInventory()->ToggleInventoryWnd(GetWidgetController());
 }

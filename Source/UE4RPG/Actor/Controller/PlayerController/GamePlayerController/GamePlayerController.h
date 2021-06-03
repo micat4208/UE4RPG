@@ -18,4 +18,7 @@ private :
 	void MouseXInput(float axis);
 	void MouseYInput(float axis);
 
+private :
+	void OpenInventory();
+
 };
