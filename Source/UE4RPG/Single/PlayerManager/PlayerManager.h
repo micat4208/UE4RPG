@@ -4,6 +4,7 @@
 
 #include "Single/PlayerManager/PlayerInventory/PlayerInventory.h"
 #include "Single/ManagerClass/ManagerClass.h"
+#include "Struct/PlayerCharacterInfo/PlayerCharacterInfo.h"
 #include "PlayerManager.generated.h"
 
 #ifndef PLAYER_ACTOR_TAG
@@ -27,6 +28,9 @@ private :
 	UPROPERTY()
 	class APlayerCharacter* PlayerCharacter;
 
+	UPROPERTY()
+	FPlayerCharacterInfo PlayerInfo;
+
 public :
 	// 플레이어 컨트롤러와 캐릭터를 등록합니다.
 	void RegisterPlayer(class ABasePlayerController* newPlayerController,
@@ -44,4 +48,7 @@ public :
 
 	FORCEINLINE class APlayerCharacter* GetPlayerCharacter() const
 	{ return PlayerCharacter; }
+
+	FORCEINLINE FPlayerCharacterInfo* GetPlayerInfo()
+	{ return &PlayerInfo; }
 };
