@@ -35,6 +35,12 @@ protected :
 	virtual void NativeConstruct() override;
 
 public :
+	// 창의 제목을 설정합니다.
+	void SetTitleText(FText newTitleText);
+
+	FORCEINLINE void SetTielText(FString newTitleText)
+	{ SetTitleText(FText::FromString(newTitleText)); }
+
 	// 이 창을 닫습니다.
 	UFUNCTION()
 	void CloseThisWnd();

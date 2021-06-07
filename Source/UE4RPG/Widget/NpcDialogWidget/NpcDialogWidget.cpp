@@ -137,6 +137,9 @@ void UNpcDialogWidget::OnShopButtonClicked()
 		GetManager(UPlayerManager)->GetPlayerController()->GetWidgetController()->
 		CreateWnd(BP_NpcShopWnd, true));
 
+	// 인벤토리 창 열기
+	NpcShopWnd->FloatingInventoryWnd();
+
 	// Npc 상점 창 초기화
 	NpcShopWnd->InitializeNpcShop(shopInfo);
 

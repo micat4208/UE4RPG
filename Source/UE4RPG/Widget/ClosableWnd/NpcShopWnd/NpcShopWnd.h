@@ -19,6 +19,9 @@ private :
 private :
 	UPROPERTY(meta = (BindWidget))
 	class UGridPanel * GridPanel_ShopItems;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton * Button_OpenInventory;
 	
 public :
 	UNpcShopWnd(const FObjectInitializer& objInitializer);
@@ -34,5 +37,8 @@ private :
 public : 
 	// 상점 창을 초기화합니다.
 	void InitializeNpcShop(FShopInfo* shopInfo);
+
+	UFUNCTION()
+	void FloatingInventoryWnd();
 
 };

@@ -35,10 +35,15 @@ private :
 	// 드래그 시작 입력 마우스 위치를 나타냅니다.
 	FVector2D DragInputPosition;
 	
+protected :
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Window Title")
+	FText TitleText;
+
 public :
 	UDraggableWndTitle(const FObjectInitializer& ObjectInitializer);
 
 protected :
+	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
@@ -57,5 +62,11 @@ private :
 
 	UFUNCTION()
 	void OnWidgetDragFinished();
+
+public :
+	FORCEINLINE FText GetTitleText() const
+	{ return TitleText; }
+
+	void SetTitleText(FText newTitleText);
 
 };

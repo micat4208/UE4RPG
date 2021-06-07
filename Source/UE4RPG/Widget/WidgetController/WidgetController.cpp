@@ -96,7 +96,7 @@ UClosableWnd* UWidgetController::CreateWnd(
 	UCanvasPanelSlot* wndSlot = newClosableWnd->GetCanvasPanelSlot();
 
 	// Ancor, Alignment 설정
-	wndSlot->SetAnchors(FAnchors(alignmentX, alignmentY, anchorMaxX, anchorMaxY));
+	wndSlot->SetAnchors(FAnchors(anchorMinX, anchorMinY, anchorMaxX, anchorMaxY));
 	wndSlot->SetAlignment(FVector2D(alignmentX, alignmentY));
 
 	// 창 크기 설정

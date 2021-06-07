@@ -15,6 +15,13 @@ UDraggableWndTitle::UDraggableWndTitle(const FObjectInitializer& ObjectInitializ
 	TargetWnd = nullptr;
 }
 
+void UDraggableWndTitle::NativePreConstruct()
+{
+	Super::NativePreConstruct();
+
+	Text_Title->SetText(TitleText);
+}
+
 void UDraggableWndTitle::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -65,4 +72,9 @@ void UDraggableWndTitle::OnWidgetDragFinished()
 	if (!IsValid(TargetWnd)) return;
 
 	bIsDragging = false;
+}
+
+void UDraggableWndTitle::SetTitleText(FText newTitleText)
+{
+	Text_Title->SetText(TitleText = newTitleText);
 }

@@ -22,6 +22,11 @@ void UClosableWnd::NativeConstruct()
 	DraggableWndTitle->GetCloseButton()->OnClicked.AddDynamic(this, &UClosableWnd::CloseThisWnd);
 }
 
+void UClosableWnd::SetTitleText(FText newTitleText)
+{
+	DraggableWndTitle->SetTitleText(newTitleText);
+}
+
 void UClosableWnd::CloseThisWnd()
 {
 	// 닫힘 처리된 창이라면 실행 X
