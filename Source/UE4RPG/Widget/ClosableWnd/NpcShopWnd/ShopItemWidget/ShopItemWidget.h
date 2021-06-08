@@ -6,6 +6,8 @@
 #include "Struct/ShopItemInfo/ShopItemInfo.h"
 #include "ShopItemWidget.generated.h"
 
+
+
 UCLASS()
 class UE4RPG_API UShopItemWidget final : 
 	public UUserWidget
@@ -32,4 +34,13 @@ private :
 public :
 	void InitializeShopItemWidget(class UNpcShopWnd* npcShopWnd, FShopItemInfo shopItemInfo);
 	
+protected :
+	// 마우스 클릭 입력이 있을 경우 호출됩니다.
+	virtual FReply NativeOnMouseButtonDown(
+		const FGeometry& inGeometry, const FPointerEvent& inMouseEvent) override;
+
+private :
+	// 아이템을 구매합니다.
+	void BuyItem();
+
 };

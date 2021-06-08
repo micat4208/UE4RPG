@@ -21,3 +21,23 @@ void UShopItemWidget::InitializeShopItemWidget(UNpcShopWnd* npcShopWnd, FShopIte
 	Text_Price->SetText(FText::FromString(FString::FromInt(ShopItemInfo.Cost)));
 
 }
+
+FReply UShopItemWidget::NativeOnMouseButtonDown(
+	const FGeometry& inGeometry, const FPointerEvent& inMouseEvent)
+{
+	// 마우스 우클릭이 발생했다면
+	if (inMouseEvent.GetEffectingButton() == EKeys::RightMouseButton)
+	{
+		// 아이템 구매
+		BuyItem();
+
+		// 이벤트 처리됨.
+		return FReply::Handled();
+	}
+
+	return Super::NativeOnMouseButtonDown(inGeometry, inMouseEvent);
+}
+
+void UShopItemWidget::BuyItem()
+{
+}

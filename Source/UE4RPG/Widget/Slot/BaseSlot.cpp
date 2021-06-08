@@ -11,6 +11,22 @@ void UBaseSlot::NativeConstruct()
 	SetSlotItemCount(0);
 }
 
+FReply UBaseSlot::NativeOnMouseButtonDown(
+	const FGeometry& inGeometry, const FPointerEvent& inMouseEvent)
+{
+	// 마우스 오른쪽 버튼이 눌렸다면
+	if (inMouseEvent.GetEffectingButton() == EKeys::RightMouseButton)
+	{
+		// 마우스 오른쪽 클릭 이벤트 발생
+		OnMouseRightButtonClickedEvent.Broadcast();
+
+		// 이벤트 처리됨.
+		return FReply::Handled();
+	}
+
+	return Super::NativeOnMouseButtonDown(inGeometry, inMouseEvent);
+}
+
 void UBaseSlot::InitializeSlot(ESlotType slotType, FName inCode)
 {
 	SlotType = slotType;

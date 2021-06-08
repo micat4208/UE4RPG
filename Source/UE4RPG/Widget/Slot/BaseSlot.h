@@ -5,12 +5,19 @@
 #include "Enum/SlotType.h"
 #include "BaseSlot.generated.h"
 
+
+DECLARE_EVENT(UBaseSlot, FSlotMouseEvent)
+
 UCLASS(Abstract)
 class UE4RPG_API UBaseSlot : 
 	public UUserWidget
 {
 	GENERATED_BODY()
 	
+public :
+	// 마우스 오른쪽 버튼 클릭 시 발생하는 이벤트입니다.
+	FSlotMouseEvent OnMouseRightButtonClickedEvent;
+
 protected :
 	// 슬롯의 타입을 나타냅니다.
 	ESlotType SlotType;
@@ -32,6 +39,11 @@ private :
 protected :
 	virtual void NativeConstruct() override;
 
+	// 마우스 클릭 입력이 있을 경우 호출됩니다.
+	virtual FReply NativeOnMouseButtonDown(
+		const FGeometry& inGeometry, const FPointerEvent& inMouseEvent) override;
+	/// - FReply : 위젯의 이벤트가 어떠한 방법으로 처리되었는지 알리기 위한 형식
+
 public :
 	// 슬롯을 초기화합니다.
 	virtual void InitializeSlot(ESlotType slotType, FName inCode);
@@ -47,4 +59,5 @@ public :
 
 	FORCEINLINE class UTextBlock* GetCountText() const
 	{ return Text_Count; }
+
 };
