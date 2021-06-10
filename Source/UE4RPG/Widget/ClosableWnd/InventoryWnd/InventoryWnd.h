@@ -32,6 +32,10 @@ public :
 private :
 	// 아이템 슬롯을 생성합니다.
 	class UInventoryItemSlot * CreateItemSlot();
+
+public :
+	FORCEINLINE TArray<class UInventoryItemSlot*>& GetItemSlots()
+	{ return ItemSlots; }
 	
 	
 };

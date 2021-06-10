@@ -13,5 +13,8 @@ UCLASS()
 class UE4RPG_API UTradeWnd : public UClosableWnd
 {
 	GENERATED_BODY()
+
+protected :
+	virtual void NativeConstruct() override;
 	
 };

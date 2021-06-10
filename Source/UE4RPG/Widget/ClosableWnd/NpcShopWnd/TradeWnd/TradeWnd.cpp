@@ -1,5 +1,9 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "TradeWnd.h"
 
+void UTradeWnd::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	WndSize = FVector2D(600.0f, 270.0f);
+
+}

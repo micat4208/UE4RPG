@@ -2,6 +2,7 @@
 
 #include "Widget/ClosableWnd/NpcShopWnd/NpcShopWnd.h"
 #include "Widget/Slot/ItemSlot/ItemSlot.h"
+#include "Widget/ClosableWnd/NpcShopWnd/TradeWnd/TradeWnd.h"
 
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
@@ -40,4 +41,6 @@ FReply UShopItemWidget::NativeOnMouseButtonDown(
 
 void UShopItemWidget::BuyItem()
 {
+	UTradeWnd* tradeWnd = NpcShopWnd->CreateTradeWnd(ESeller::ShopKeeper, ItemSlot, &ShopItemInfo);
+	if (!tradeWnd) return;
 }
