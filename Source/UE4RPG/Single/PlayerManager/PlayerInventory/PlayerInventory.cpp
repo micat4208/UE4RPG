@@ -1,7 +1,11 @@
 #include "PlayerInventory.h"
 
+#include "Single/GameInstance/RPGGameInstance.h"
+#include "Single/PlayerManager/PlayerManager.h"
+
 #include "Widget/WidgetController/WidgetController.h"
 #include "Widget/ClosableWnd/InventoryWnd/InventoryWnd.h"
+#include "Widget/Slot/ItemSlot/InventoryItemSlot/InventoryItemSlot.h"
 
 
 UPlayerInventory::UPlayerInventory()
@@ -42,4 +46,83 @@ void UPlayerInventory::ToggleInventoryWnd(UWidgetController* widgetController)
 {
 	if (IsValid(InventoryWnd)) CloseInventoryWnd();
 	else CreateInventoryWnd(widgetController, EInputModeType::IM_GameAndUI, true);
+}
+
+void UPlayerInventory::AddItem(FItemSlotInfo& newItemSlotInfo)
+{
+	auto playerInfo = GetManager(UPlayerManager)->GetPlayerInfo();
+	TArray<FItemSlotInfo>& inventoryItemInfos = playerInfo->InventoryItemInfos;
+
+	// index 에 해당하는 슬롯에 매개변수 newItemSlotInfo 에 전달한 아이템을 최대한 채우는 함수입니다.
+	Func(FillSlot, (int32 index), 
+		&newItemSlotInfo, &inventoryItemInfos)
+	{
+		// 아이템을 추가할 수 있는 여유 공간이 존재하는지 확인합니다.
+		/// - 최대 아이템 개수 - 현재 소지중인 아이템 개수 = 추가 가능한 개수
+		int32 addableItemCount = inventoryItemInfos[index].MaxSlotCount -
+			inventoryItemInfos[index].ItemCount;
+
+		// index 번째 슬롯에 아이템을 추가할 수 있다면
+		if (addableItemCount > 0)
+		{
+			// 추가할 수 있는 아이템 개수를 구합니다.
+			addableItemCount =
+				(addableItemCount < newItemSlotInfo.ItemCount) ?
+				addableItemCount :
+				newItemSlotInfo.ItemCount;
+
+			// 아이템을 채웁니다.
+			inventoryItemInfos[index].ItemCount += addableItemCount;
+
+			// 추가한 아이템을 제외합니다.
+			newItemSlotInfo.ItemCount -= addableItemCount;
+		}
+	};
+
+
+
+	// 내용이 변경된 인벤토리 슬롯들을 저장할 배열
+	TArray<UInventoryItemSlot*> changedInventoryItemSlots;
+
+	for (int32 i = 0; i < playerInfo->InventorySlotCount; ++i)
+	{
+
+		// 만약 추가하려는 아이템과 동일한 아이템을 갖는 슬롯을 찾았다면
+		if (inventoryItemInfos[i].IsSameItem(newItemSlotInfo))
+		{
+			// 해당 슬롯(inventoryItemInfos[i])에 아이템을 최대한 채웁니다.
+			FillSlot(i);
+
+			// 내용을 변경시킨 인벤토리 슬롯을 배열에 추가합니다.
+			if (IsValid(InventoryWnd))
+				changedInventoryItemSlots.Add(InventoryWnd->GetItemSlots()[i]);
+		}
+
+		// 빈 아이템 슬롯을 찾았다면
+		else if (inventoryItemInfos[i].IsEmpty())
+		{
+			// 추가시키려는 슬롯의 ItemCode, MaxSlotCount 의 값을 추가하려는 아이템의 내용으로 설정합니다.
+			inventoryItemInfos[i] = newItemSlotInfo;
+			inventoryItemInfos[i].ItemCount = 0;
+
+			// 아이템을 채웁니다.
+			FillSlot(i);
+
+			// 내용을 변경시킨 인벤토리 슬롯을 배열에 추가합니다.
+			if (IsValid(InventoryWnd))
+				changedInventoryItemSlots.Add(InventoryWnd->GetItemSlots()[i]);
+		}
+	}
+
+	// 인벤토리 창이 열린 경우 갱신시킵니다.
+	/// - 내용이 변경된 인벤토리 슬롯들을 갱신시킵니다.
+	for (int32 i = 0; i < changedInventoryItemSlots.Num(); ++i)
+	{
+		UInventoryItemSlot* changedInventoryItemSlot = changedInventoryItemSlots[i];
+
+		changedInventoryItemSlot->SetItemInfo(
+			inventoryItemInfos[i].ItemCode);
+
+		changedInventoryItemSlot->UpdateInventoryItemSlot();
+	}
 }

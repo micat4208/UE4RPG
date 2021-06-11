@@ -91,6 +91,8 @@ UTradeWnd* UNpcShopWnd::CreateTradeWnd(
 	TradeWnd = Cast<UTradeWnd>(WidgetController->CreateWnd(
 		BP_TradeWnd, true, EInputModeType::IM_Default, true));
 
+	TradeWnd->InitializeTradeWnd(seller, connectedItemSlot, shopItemInfo);
+
 	TradeWnd->OnWndClosed.AddLambda([this]() { TradeWnd = nullptr; });
 	
 	return TradeWnd;

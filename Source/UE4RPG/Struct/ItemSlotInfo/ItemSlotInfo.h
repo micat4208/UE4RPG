@@ -24,4 +24,13 @@ public :
 	FItemSlotInfo();
 	FItemSlotInfo(FName itemCode, int32 itemCount = 0, int32 maxSlotCount = 0);
 
+	FORCEINLINE bool IsSameItem(const FName& itemCode) const
+	{ return this->ItemCode == itemCode; }
+
+	FORCEINLINE bool IsSameItem(const FItemSlotInfo& itemSlotInfo) const
+	{ return IsSameItem(itemSlotInfo.ItemCode); }
+
+	FORCEINLINE bool IsEmpty() const
+	{ return ItemCode.IsNone(); }
+
 };

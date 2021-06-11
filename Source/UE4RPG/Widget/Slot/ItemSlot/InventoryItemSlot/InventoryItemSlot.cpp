@@ -1,5 +1,8 @@
 #include "InventoryItemSlot.h"
 
+#include "Single/GameInstance/RPGGameInstance.h"
+#include "Single/PlayerManager/PlayerManager.h"
+
 void UInventoryItemSlot::InitializeSlot(ESlotType slotType, FName itemCode, int32 itemSlotIndex)
 {
 	Super::InitializeSlot(slotType, itemCode);
@@ -7,4 +10,12 @@ void UInventoryItemSlot::InitializeSlot(ESlotType slotType, FName itemCode, int3
 	ItemSlotIndex = itemSlotIndex;
 
 
+}
+
+void UInventoryItemSlot::UpdateItemCountText()
+{
+	auto& itemSlotInfo = GetManager(UPlayerManager)->GetPlayerInfo()->
+		InventoryItemInfos[ItemSlotIndex];
+
+	SetSlotItemCount(itemSlotInfo.ItemCount);
 }

@@ -20,5 +20,14 @@ private :
 public :
 	void InitializeSlot(ESlotType slotType, FName itemCode, int32 itemSlotIndex);
 
+	// 인벤토리 슬롯을 갱신합니다.
+	FORCEINLINE void UpdateInventoryItemSlot()
+	{
+		UpdateItemImage();
+		UpdateItemCountText();
+	}
+
+	// 아이톔 개수 텍스트를 갱신합니다.
+	void UpdateItemCountText();
 	
 };

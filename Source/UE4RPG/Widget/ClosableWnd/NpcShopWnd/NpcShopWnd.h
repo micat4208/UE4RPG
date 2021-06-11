@@ -30,6 +30,7 @@ private :
 
 	UPROPERTY(meta = (BindWidget))
 	class UButton * Button_OpenInventory;
+
 	
 public :
 	UNpcShopWnd(const FObjectInitializer& objInitializer);

@@ -5,6 +5,8 @@
 
 #include "Enum/InputModeType.h"
 
+#include "Struct/ItemSlotInfo/ItemSlotInfo.h"
+
 #include "PlayerInventory.generated.h"
 
 UCLASS()
@@ -33,6 +35,11 @@ public :
 
 	// 인벤토리 창을 토글합니다.
 	void ToggleInventoryWnd(class UWidgetController* widgetController);
+
+public :
+	// 아이템을 인벤토리에 추가합니다.
+	/// - newItemSlotInfo : 인벤토리에 추가시킬 아이템 정보를 전달합니다.
+	void AddItem(FItemSlotInfo& newItemSlotInfo);
 
 public :
 	FORCEINLINE class UInventoryWnd* GetInventoryWnd() const
