@@ -9,7 +9,14 @@ void UInventoryItemSlot::InitializeSlot(ESlotType slotType, FName itemCode, int3
 
 	ItemSlotIndex = itemSlotIndex;
 
+	UpdateItemCountText();
+}
 
+void UInventoryItemSlot::UpdateInventoryItemSlot()
+{
+	SetItemInfo(GetManager(UPlayerManager)->GetPlayerInfo()->InventoryItemInfos[ItemSlotIndex].ItemCode);
+	UpdateItemImage();
+	UpdateItemCountText();
 }
 
 void UInventoryItemSlot::UpdateItemCountText()

@@ -79,6 +79,19 @@ void UPlayerInventory::AddItem(FItemSlotInfo& newItemSlotInfo)
 		}
 	};
 
+	Func(UpdateInventorySlots, (TArray<UInventoryItemSlot*>& _changedInventoryItemSlots),
+		&inventoryItemInfos)
+	{
+		for (int32 i = 0; i < _changedInventoryItemSlots.Num(); ++i)
+		{
+			UInventoryItemSlot* changedInventoryItemSlot = _changedInventoryItemSlots[i];
+
+			changedInventoryItemSlot->SetItemInfo(
+				inventoryItemInfos[i].ItemCode);
+
+			changedInventoryItemSlot->UpdateInventoryItemSlot();
+		}
+	};
 
 
 	// 내용이 변경된 인벤토리 슬롯들을 저장할 배열
@@ -112,6 +125,16 @@ void UPlayerInventory::AddItem(FItemSlotInfo& newItemSlotInfo)
 			if (IsValid(InventoryWnd))
 				changedInventoryItemSlots.Add(InventoryWnd->GetItemSlots()[i]);
 		}
+
+		// 모든 아이템을 추가한 경우
+		if (newItemSlotInfo.ItemCount <= 0)
+		{
+			// 내용이 변경된 슬롯들 갱신
+			UpdateInventorySlots(changedInventoryItemSlots);
+
+			// 모든 아이템 추가함
+			return;
+		}
 	}
 
 	// 인벤토리 창이 열린 경우 갱신시킵니다.
@@ -125,4 +148,30 @@ void UPlayerInventory::AddItem(FItemSlotInfo& newItemSlotInfo)
 
 		changedInventoryItemSlot->UpdateInventoryItemSlot();
 	}
+}
+
+void UPlayerInventory::RemoveItem(int32 itemSlotIndex, int32 removeCount)
+{
+	FPlayerCharacterInfo* playerInfo = GetManager(UPlayerManager)->GetPlayerInfo();
+	UInventoryWnd * inventoryWnd = GetInventoryWnd();
+	TArray<FItemSlotInfo>& inventoryItemInfos = playerInfo->InventoryItemInfos;
+
+	// removeCount 에 ITEM_ALL 이 전달되었다면 슬롯을 완전히 비웁니다.
+	inventoryItemInfos[itemSlotIndex].ItemCount -=
+		(removeCount == ITEM_ALL) ?
+		inventoryItemInfos[itemSlotIndex].ItemCount :
+		removeCount;
+
+	// itemSlotIndex 번재 슬롯에 아이템이 존재하지 않을 경우
+	if (inventoryItemInfos[itemSlotIndex].ItemCount <= 0)
+
+		// 슬롯 정보를 비웁니다.
+		inventoryItemInfos[itemSlotIndex].Clear();
+
+	// 인벤토리 창이 열린 경우 슬롯 갱신
+	if (IsValid(inventoryWnd))
+		inventoryWnd->GetItemSlots()[itemSlotIndex]->UpdateInventoryItemSlot();
+
+
+
 }

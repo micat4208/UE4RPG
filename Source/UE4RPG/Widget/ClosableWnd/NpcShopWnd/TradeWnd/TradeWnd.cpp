@@ -4,6 +4,7 @@
 
 #include "Components/TextBlock.h"
 #include "Components/Button.h"
+#include "Components/EditableTextBox.h"
 
 using namespace ESeller;
 
@@ -12,9 +13,6 @@ void UTradeWnd::NativeConstruct()
 	Super::NativeConstruct();
 
 	WndSize = FVector2D(600.0f, 270.0f);
-
-	Button_Cancel->OnClicked.AddDynamic(this, &Super::CloseThisWnd);
-
 }
 
 void UTradeWnd::InitializeTradeWnd(
@@ -39,4 +37,22 @@ void UTradeWnd::InitializeTradeWnd(
 		FText::FromString(FString::FromInt(ShopItemInfo->Cost)) :
 		FText::FromString(FString::FromInt(connectedItemSlot->GetItemInfo()->Price)));
 
+	Button_Trade->OnClicked.AddDynamic(this, &UTradeWnd::TradeButtonClicked);
+	Button_Cancel->OnClicked.AddDynamic(this, &Super::CloseThisWnd);
+
+}
+
+bool UTradeWnd::IsInputTextEmpty() const
+{
+	return EditableTextBox_TradeCount->GetText().IsEmpty();
+}
+
+int32 UTradeWnd::GetInputTradeCount() const
+{
+	return FCString::Atoi(*EditableTextBox_TradeCount->GetText().ToString());
+}
+
+void UTradeWnd::TradeButtonClicked()
+{
+	OnTradeButtonClicked.Broadcast();
 }

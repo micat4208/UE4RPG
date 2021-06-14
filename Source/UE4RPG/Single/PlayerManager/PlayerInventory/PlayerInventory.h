@@ -15,6 +15,9 @@ class UE4RPG_API UPlayerInventory final :
 {
 	GENERATED_BODY()
 
+public :
+	enum EItemCount : int8{ ITEM_ALL = -1 };
+
 private :
 	TSubclassOf<class UInventoryWnd> BP_InventoryWnd;
 
@@ -40,6 +43,12 @@ public :
 	// 아이템을 인벤토리에 추가합니다.
 	/// - newItemSlotInfo : 인벤토리에 추가시킬 아이템 정보를 전달합니다.
 	void AddItem(FItemSlotInfo& newItemSlotInfo);
+
+	// 아이템을 인벤토리에서 제거합니다.
+	/// - itemSlotIndex : 제거할 슬롯의 인덱스를 전달합니다.
+	/// - removeCount : 제거할 개수를 전달합니다.
+	///   만약 ITEM_ALL 이 전달된다면 모든 아이템을 제거합니다.
+	void RemoveItem(int32 itemSlotIndex, int32 removeCount = ITEM_ALL);
 
 public :
 	FORCEINLINE class UInventoryWnd* GetInventoryWnd() const

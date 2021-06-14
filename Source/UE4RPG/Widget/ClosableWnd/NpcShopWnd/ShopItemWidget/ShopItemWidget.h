@@ -15,6 +15,9 @@ class UE4RPG_API UShopItemWidget final :
 	GENERATED_BODY()
 
 private :
+	class UDataTable* DT_ItemInfo;
+
+private :
 	// Npc 상점 창 객체를 나타냅니다.
 	class UNpcShopWnd* NpcShopWnd;
 
@@ -30,6 +33,9 @@ private :
 
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock * Text_Price;
+
+public :
+	UShopItemWidget(const FObjectInitializer& ObjIniter);
 
 public :
 	void InitializeShopItemWidget(class UNpcShopWnd* npcShopWnd, FShopItemInfo shopItemInfo);

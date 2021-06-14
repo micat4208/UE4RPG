@@ -1,4 +1,4 @@
-#include "NpcShopWnd.h"
+ï»¿#include "NpcShopWnd.h"
 
 #include "Actor/Controller/PlayerController/BasePlayerController.h"
 
@@ -54,18 +54,39 @@ void UNpcShopWnd::SaleItem(UInventoryWnd* inventoryWnd, UItemSlot* itemSlot)
 	UTradeWnd* tradeWnd = CreateTradeWnd(ESeller::Player, itemSlot);
 	if (!tradeWnd) return; 
 
+	tradeWnd->OnTradeButtonClicked.AddLambda(
+		[this, tradeWnd]()
+		{
+			// ì…ë ¥ ê°’ì´ ì˜ëª» ë˜ì—ˆëŠ”ì§€ í™•ì¸í•©ë‹ˆë‹¤.
+			if (tradeWnd->IsInputTextEmpty() || tradeWnd->GetInputTradeCount() == 0)
+			{
+				UE_LOG(LogTemp, Error, TEXT("UNpcShopWnd.cpp :: %d LINE :: ì…ë ¥ ê°’ì´ ì˜ëª» ë˜ì—ˆìŠµë‹ˆë‹¤. (ì²˜ë¦¬ í•„ìš”)"), __LINE__);
+				
+				return;
+			}
+
+			UInventoryItemSlot* inventorySlot = Cast<UInventoryItemSlot>(tradeWnd->GetConnectedItemSlot());
+			int32 inputCount = tradeWnd->GetInputTradeCount();
+
+			// ì•„ì´í…œ ì œê±°
+			GetManager(UPlayerManager)->GetPlayerInventory()->RemoveItem(
+				inventorySlot->GetItemSlotIndex(), inputCount);
+
+			tradeWnd->CloseThisWnd();
+		});
+
 
 }
 
 void UNpcShopWnd::InitializeNpcShop(FShopInfo* shopInfo)
 {
-	// Ã¢ Á¦¸ñ ¼³Á¤
+	// ì°½ ì œëª© ì„¤ì •
 	SetTitleText(shopInfo->ShopName);
 
 	const int maxColumnCount = 2;
 	int currentColumnCount = 0;
 
-	// ÆÇ¸Å ¾ÆÀÌÅÛ Ãß°¡
+	// íŒë§¤ ì•„ì´í…œ ì¶”ê°€
 	for (auto shopItemInfo : shopInfo->ShopItems)
 	{
 		UWidgetController::SortGridPanelElem(
@@ -81,10 +102,10 @@ UTradeWnd* UNpcShopWnd::CreateTradeWnd(
 	UItemSlot* connectedItemSlot,
 	FShopItemInfo* shopItemInfo)
 {
-	// ÀÌ¹Ì ±³È¯ Ã¢ÀÌ ¶ç¿öÁ® ÀÖ´Â °æ¿ì Ãß°¡·Î ¶ç¿ìÁö ¾Êµµ·Ï ÇÕ´Ï´Ù.
+	// ì´ë¯¸ êµí™˜ ì°½ì´ ë„ì›Œì ¸ ìˆëŠ” ê²½ìš° ì¶”ê°€ë¡œ ë„ìš°ì§€ ì•Šë„ë¡ í•©ë‹ˆë‹¤.
 	if (IsValid(TradeWnd)) return nullptr;
 
-	// ¾ÆÀÌÅÛ Á¤º¸°¡ ºñ¾îÀÖ´Â ½½·ÔÀ» ¿ìÅ¬¸¯Çß´Ù¸é ±³È¯ Ã¢ÀÌ ¶ç¿öÁöÁö ¾Êµµ·Ï ÇÕ´Ï´Ù.
+	// ì•„ì´í…œ ì •ë³´ê°€ ë¹„ì–´ìˆëŠ” ìŠ¬ë¡¯ì„ ìš°í´ë¦­í–ˆë‹¤ë©´ êµí™˜ ì°½ì´ ë„ì›Œì§€ì§€ ì•Šë„ë¡ í•©ë‹ˆë‹¤.
 	if (connectedItemSlot->GetItemInfo()->IsEmpty()) return nullptr;
 
 
@@ -105,29 +126,29 @@ void UNpcShopWnd::FloatingInventoryWnd()
 	auto inventoryWnd = GetManager(UPlayerManager)->GetPlayerInventory()->CreateInventoryWnd(
 		widgetController, EInputModeType::IM_Default, true);
 
-	// npc »óÁ¡ Ã¢ Àı¹İ Å©±â¸¦ ¾ò½À´Ï´Ù.
+	// npc ìƒì  ì°½ ì ˆë°˜ í¬ê¸°ë¥¼ ì–»ìŠµë‹ˆë‹¤.
 	FVector2D npcShopWndHalfSize = WndSize * 0.5f;
 
-	// npc »óÁ¡ Ã¢ À§Ä¡¸¦ ÀúÀåÇÕ´Ï´Ù.
+	// npc ìƒì  ì°½ ìœ„ì¹˜ë¥¼ ì €ì¥í•©ë‹ˆë‹¤.
 	FVector2D npcShopWndPosition = GetCanvasPanelSlot()->GetPosition();
 
-	// ÀÎº¥Åä¸® Ã¢ Àı¹İ Å©±â¸¦ ¾ò½À´Ï´Ù.
+	// ì¸ë²¤í† ë¦¬ ì°½ ì ˆë°˜ í¬ê¸°ë¥¼ ì–»ìŠµë‹ˆë‹¤.
 	FVector2D inventoryWndHalfSize = inventoryWnd->WndSize * 0.5f;
 
-	// ÀÎº¥Åä¸® Ã¢ÀÇ À§Ä¡¸¦ °è»êÇÕ´Ï´Ù.
+	// ì¸ë²¤í† ë¦¬ ì°½ì˜ ìœ„ì¹˜ë¥¼ ê³„ì‚°í•©ë‹ˆë‹¤.
 	FVector2D newInventoryWndPosition = npcShopWndPosition +
 		((npcShopWndHalfSize + inventoryWndHalfSize) * FVector2D(1.0f, 0.0f));
 
 	newInventoryWndPosition.Y += inventoryWndHalfSize.Y - npcShopWndHalfSize.Y;
 
-	// ÀÎº¥Åä¸® Ã¢ÀÇ À§Ä¡¸¦ ¼³Á¤ÇÕ´Ï´Ù.
+	// ì¸ë²¤í† ë¦¬ ì°½ì˜ ìœ„ì¹˜ë¥¼ ì„¤ì •í•©ë‹ˆë‹¤.
 	inventoryWnd->GetCanvasPanelSlot()->SetPosition(newInventoryWndPosition);
 
-	// »óÁ¡ Ã¢ÀÌ ´İÈú ¶§ ÀÎº¥Åä¸® Ã¢µµ ´İÈ÷µµ·Ï ÇÕ´Ï´Ù.
+	// ìƒì  ì°½ì´ ë‹«í ë•Œ ì¸ë²¤í† ë¦¬ ì°½ë„ ë‹«íˆë„ë¡ í•©ë‹ˆë‹¤.
 	OnWndClosed.AddLambda([this]()
 		{ GetManager(UPlayerManager)->GetPlayerInventory()->CloseInventoryWnd(); });
 
-	// ÀÎº¥Åä¸® ½½·Ô ¿ìÅ¬¸¯ ½Ã ¾ÆÀÌÅÛ ÆÇ¸Å°¡ ÀÌ·ç¾îÁú ¼ö ÀÖµµ·Ï ÇÕ´Ï´Ù.
+	// ì¸ë²¤í† ë¦¬ ìŠ¬ë¡¯ ìš°í´ë¦­ ì‹œ ì•„ì´í…œ íŒë§¤ê°€ ì´ë£¨ì–´ì§ˆ ìˆ˜ ìˆë„ë¡ í•©ë‹ˆë‹¤.
 	for (auto slot : inventoryWnd->GetItemSlots())
 	{
 		slot->OnMouseRightButtonClickedEvent.AddLambda(

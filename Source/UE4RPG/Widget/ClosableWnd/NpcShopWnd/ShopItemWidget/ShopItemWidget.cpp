@@ -1,24 +1,37 @@
-#include "ShopItemWidget.h"
+ï»¿#include "ShopItemWidget.h"
+
+#include "Single/GameInstance/RPGGameInstance.h"
+#include "Single/PlayerManager/PlayerManager.h"
 
 #include "Widget/ClosableWnd/NpcShopWnd/NpcShopWnd.h"
 #include "Widget/Slot/ItemSlot/ItemSlot.h"
 #include "Widget/ClosableWnd/NpcShopWnd/TradeWnd/TradeWnd.h"
 
+#include "Struct/ItemInfo/ItemInfo.h"
+
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
+
+UShopItemWidget::UShopItemWidget(const FObjectInitializer& ObjIniter) :
+	Super(ObjIniter)
+{
+	static ConstructorHelpers::FObjectFinder<UDataTable> DT_ITEM_INFO(
+		TEXT("DataTable'/Game/Resources/DataTable/DT_ItemInfo.DT_ItemInfo'"));
+	if (DT_ITEM_INFO.Succeeded()) DT_ItemInfo = DT_ITEM_INFO.Object;
+}
 
 void UShopItemWidget::InitializeShopItemWidget(UNpcShopWnd* npcShopWnd, FShopItemInfo shopItemInfo)
 {
 	NpcShopWnd = npcShopWnd;
 	ShopItemInfo = shopItemInfo;
 
-	// ¾ÆÀÌÅÛ ½½·Ô ÃÊ±âÈ­
+	// ì•„ì´í…œ ìŠ¬ë¡¯ ì´ˆê¸°í™”
 	ItemSlot->InitializeSlot(ESlotType::ShopItemSlot, ShopItemInfo.ItemCode);
 
-	// ¾ÆÀÌÅÛ ÀÌ¸§ ¼³Á¤
+	// ì•„ì´í…œ ì´ë¦„ ì„¤ì •
 	Text_ItemName->SetText(ItemSlot->GetItemInfo()->ItemName);
 
-	// °¡°Ý ¼³Á¤
+	// ê°€ê²© ì„¤ì •
 	Text_Price->SetText(FText::FromString(FString::FromInt(ShopItemInfo.Cost)));
 
 }
@@ -26,13 +39,13 @@ void UShopItemWidget::InitializeShopItemWidget(UNpcShopWnd* npcShopWnd, FShopIte
 FReply UShopItemWidget::NativeOnMouseButtonDown(
 	const FGeometry& inGeometry, const FPointerEvent& inMouseEvent)
 {
-	// ¸¶¿ì½º ¿ìÅ¬¸¯ÀÌ ¹ß»ýÇß´Ù¸é
+	// ë§ˆìš°ìŠ¤ ìš°í´ë¦­ì´ ë°œìƒí–ˆë‹¤ë©´
 	if (inMouseEvent.GetEffectingButton() == EKeys::RightMouseButton)
 	{
-		// ¾ÆÀÌÅÛ ±¸¸Å
+		// ì•„ì´í…œ êµ¬ë§¤
 		BuyItem();
 
-		// ÀÌº¥Æ® Ã³¸®µÊ.
+		// ì´ë²¤íŠ¸ ì²˜ë¦¬ë¨.
 		return FReply::Handled();
 	}
 
@@ -43,4 +56,27 @@ void UShopItemWidget::BuyItem()
 {
 	UTradeWnd* tradeWnd = NpcShopWnd->CreateTradeWnd(ESeller::ShopKeeper, ItemSlot, &ShopItemInfo);
 	if (!tradeWnd) return;
+
+	tradeWnd->OnTradeButtonClicked.AddLambda(
+		[this, tradeWnd]()
+		{
+			// ìž…ë ¥ ê°’ì´ ìž˜ëª»ë˜ì—ˆì„ ê²½ìš°
+			if (tradeWnd->IsInputTextEmpty() || tradeWnd->GetInputTradeCount() == 0)
+			{
+				UE_LOG(LogTemp, Error, 
+					TEXT("UShopItemWidget.cpp :: %d LINE :: ìž…ë ¥ ê°’ì´ ìž˜ëª» ë˜ì—ˆìŠµë‹ˆë‹¤. (ì²˜ë¦¬ í•„ìš”)"), __LINE__);
+				return;
+			}
+
+			FString contextString;
+			FItemInfo* itemInfo = DT_ItemInfo->FindRow<FItemInfo>(
+				ShopItemInfo.ItemCode, contextString);
+
+			FItemSlotInfo newItemSlotInfo(ShopItemInfo.ItemCode, tradeWnd->GetInputTradeCount(),
+				((itemInfo->ItemType == EItemType::Equipment) ? 1 : itemInfo->MaxSlotCount));
+
+			GetManager(UPlayerManager)->GetPlayerInventory()->AddItem(newItemSlotInfo);
+
+			tradeWnd->CloseThisWnd();
+		});
 }

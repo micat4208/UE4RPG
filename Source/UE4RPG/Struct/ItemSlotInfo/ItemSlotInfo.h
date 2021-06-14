@@ -33,4 +33,12 @@ public :
 	FORCEINLINE bool IsEmpty() const
 	{ return ItemCode.IsNone(); }
 
+	// 해당 데이터를 비웁니다/
+	FORCEINLINE void Clear()
+	{
+		ItemCode = FName();
+		ItemCount = 0;
+		MaxSlotCount = 0;
+	}
+
 };
