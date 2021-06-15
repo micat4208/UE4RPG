@@ -5,6 +5,9 @@ FPlayerCharacterInfo::FPlayerCharacterInfo()
 {
 	InventorySlotCount = 30;
 
+	// Test Code ...
+	Silver = 100000;
+
 	for (int32 i = 0; i < InventorySlotCount; ++i)
 		InventoryItemInfos.Add(FItemSlotInfo());
 

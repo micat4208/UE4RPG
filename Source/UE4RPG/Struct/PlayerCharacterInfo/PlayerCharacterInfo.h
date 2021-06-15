@@ -20,6 +20,10 @@ public:
 	UPROPERTY()
 	TArray<FItemSlotInfo> InventoryItemInfos;
 
+	// ¼ÒÁö±Ý
+	UPROPERTY()
+	int32 Silver;
+
 public :
 	FPlayerCharacterInfo();
 

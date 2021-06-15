@@ -61,6 +61,9 @@ private :
 	UFUNCTION()
 	void TradeButtonClicked();
 
+	UFUNCTION()
+	void OnTradeCountTextChanged(const FText& text);
+
 public :
 	FORCEINLINE class UItemSlot* GetConnectedItemSlot() const
 	{ return ConnectedItemSlot; }
