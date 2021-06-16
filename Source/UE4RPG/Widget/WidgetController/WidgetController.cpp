@@ -2,13 +2,23 @@
 
 #include "Actor/Controller/PlayerController/BasePlayerController.h"
 
-#include "Widget/ClosableWnd/ClosableWnd.h"
-
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Components/GridSlot.h"
 
 
+
+UWidgetController::UWidgetController(const FObjectInitializer& objIniter) :
+	Super(objIniter)
+{
+	static ConstructorHelpers::FClassFinder<UMessageBoxWnd> BP_MESSAGE_BOX_WND(
+		TEXT("WidgetBlueprint'/Game/Blueprints/Widget/ClosableWnd/MessageBoxWnd/BP_MessageBoxWnd.BP_MessageBoxWnd_C'"));
+	if (BP_MESSAGE_BOX_WND.Succeeded()) BP_MessageBoxWnd = BP_MESSAGE_BOX_WND.Class;
+
+	static ConstructorHelpers::FClassFinder<UUserWidget> BP_MESSAGE_BOX_BACKGROUND(
+		TEXT("WidgetBlueprint'/Game/Blueprints/Widget/ClosableWnd/MessageBoxWnd/BP_MessageBoxBackground.BP_MessageBoxBackground_C'"));
+	if (BP_MESSAGE_BOX_BACKGROUND.Succeeded()) BP_MessageBoxBackground = BP_MESSAGE_BOX_BACKGROUND.Class;
+}
 
 void UWidgetController::ResetInputMode(bool bForceChange)
 {
@@ -36,6 +46,28 @@ void UWidgetController::SaveWndPosition(const UClosableWnd* closableWnd)
 void UWidgetController::InitializeWidgetController(ABasePlayerController* playerController)
 {
 	PlayerController = playerController;
+}
+
+UMessageBoxWnd* UWidgetController::CreateMessageBox(FText titleText, FText msg, bool bUseBackground, uint8 button)
+{
+	class UUserWidget* msgBoxBackground = nullptr;
+
+	if (bUseBackground)
+	{
+		msgBoxBackground = CreateWidget<UUserWidget>(this, BP_MessageBoxBackground);
+		CanvasPanel_WndParent->AddChild(msgBoxBackground);
+
+		UCanvasPanelSlot* canvasPanelSlot = Cast<UCanvasPanelSlot>(msgBoxBackground->Slot);
+		canvasPanelSlot->SetAnchors(FAnchors(0.0f, 0.0f, 1.0f, 1.0f));
+		canvasPanelSlot->SetOffsets(FMargin(0.0f, 0.0f, 0.0f, 0.0f));
+	}
+
+	// 메시지 박스 생성
+	UMessageBoxWnd * msgBox = Cast<UMessageBoxWnd>(CreateWnd(BP_MessageBoxWnd));
+	msgBox->MsgBoxBackground = msgBoxBackground;
+	msgBox->InitializeMessageBox(titleText, msg, button);
+
+	return msgBox;
 }
 
 void UWidgetController::AddChildWidget(

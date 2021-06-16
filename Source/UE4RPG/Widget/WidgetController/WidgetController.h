@@ -3,7 +3,10 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 
+#include "Widget/ClosableWnd/MessageBoxWnd/MessageBoxWnd.h"
+
 #include "Enum/InputModeType.h"
+#include "Enum/MessageBoxButton.h"
 
 #include "WidgetController.generated.h"
 
@@ -12,6 +15,10 @@ class UE4RPG_API UWidgetController final :
 	public UUserWidget
 {
 	GENERATED_BODY()
+
+private :
+	TSubclassOf<class UMessageBoxWnd> BP_MessageBoxWnd;
+	TSubclassOf<class UUserWidget> BP_MessageBoxBackground;
 
 private :
 	class ABasePlayerController* PlayerController;
@@ -36,6 +43,9 @@ private :
 	UPROPERTY(meta = (BindWidget))
 	class UCanvasPanel* CanvasPanel_WndParent;
 
+public :
+	UWidgetController(const FObjectInitializer& objIniter);
+
 private :
 	// 입력 모드, 커서 표시를 기본 값으로 초기화합니다.
 	/// - 열린 위젯이나, 창이 존재한다면 입력 모드가 초기화되지 않습니다.
@@ -48,6 +58,20 @@ private :
 public :
 	// Widget Controller 를 초기화합니다.
 	void InitializeWidgetController(class ABasePlayerController* playerController);
+
+	// 메시지 박스를 생성합니다.
+	/// - titleText : 메시지 박스의 타이틀 문자열을 전달합니다.
+	/// - msg : 메시지 박스의 내용을 전달합니다.
+	/// - bUseBackground : 메시지 박스 후면에 배경이 깔리게 되도록 할 것인지를 결정합니다.
+	/// - button : 표시될 버튼들을 나타냅니다.
+	///   EMessageBoxButton::Type 을 OR 연산자와 함께 전달해야 합니다.
+	///   ex) EMessageBoxButton::MB_OK | EMessageBoxButton::MB_Cancel
+	FORCEINLINE class UMessageBoxWnd* CreateMessageBox(FString titleText, FString msg,
+		bool bUseBackground = false, uint8 button = EMessageBoxButton::MB_Ok)
+	{ return CreateMessageBox(FText::FromString(titleText), FText::FromString(msg), bUseBackground, button); }
+
+	class UMessageBoxWnd* CreateMessageBox(FText titleText, FText msg, 
+		bool bUseBackground = false, uint8 button = EMessageBoxButton::MB_Ok);
 
 	// 하위 위젯을 추가합니다.
 	/// - 추가된 위젯은 CanvasPanel_WidgetParent 캔버스 하위로 추가되며,

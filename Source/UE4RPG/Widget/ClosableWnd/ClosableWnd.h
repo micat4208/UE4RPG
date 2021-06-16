@@ -43,7 +43,7 @@ public :
 
 	// 이 창을 닫습니다.
 	UFUNCTION()
-	void CloseThisWnd();
+	virtual void CloseThisWnd();
 
 	// 이 창의 CanvasPanelSlot 을 반환합니다.
 	/// - 이 메서드는 항상 화면에 추가된 후 사용되어야 합니다.

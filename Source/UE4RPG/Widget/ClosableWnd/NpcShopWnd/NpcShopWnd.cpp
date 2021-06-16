@@ -60,10 +60,18 @@ void UNpcShopWnd::SaleItem(UInventoryWnd* inventoryWnd, UItemSlot* itemSlot)
 			// 입력 값이 잘못 되었는지 확인합니다.
 			if (tradeWnd->IsInputTextEmpty() || tradeWnd->GetInputTradeCount() == 0)
 			{
+				// 메시지 박스 제목 : 입력 확인
+				// 메시지 박스 내용 : 입력된 내용이 잘못 되었습니다.
 				UE_LOG(LogTemp, Error, TEXT("UNpcShopWnd.cpp :: %d LINE :: 입력 값이 잘못 되었습니다. (처리 필요)"), __LINE__);
 				
 				return;
 			}
+
+			// 아이템 판매 확인
+			// 메시지 박스 제목 : 아이템 판매 확인
+			// 메시지 박스 내용 : "아이템 이름" 을(를) "개수"개 판매합니다.
+			// 표시할 버튼 : Ok, Cancel
+			// Ok 버튼을 눌렀을 경우 판매가 이루어질 수 있도록 합니다.
 
 			UInventoryItemSlot* inventorySlot = Cast<UInventoryItemSlot>(tradeWnd->GetConnectedItemSlot());
 			int32 inputCount = tradeWnd->GetInputTradeCount();

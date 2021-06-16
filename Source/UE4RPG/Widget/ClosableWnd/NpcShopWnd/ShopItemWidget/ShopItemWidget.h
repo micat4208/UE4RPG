@@ -18,6 +18,9 @@ private :
 	class UDataTable* DT_ItemInfo;
 
 private :
+	// WidgetController
+	class UWidgetController* WidgetController;
+
 	// Npc 상점 창 객체를 나타냅니다.
 	class UNpcShopWnd* NpcShopWnd;
 
@@ -36,6 +39,9 @@ private :
 
 public :
 	UShopItemWidget(const FObjectInitializer& ObjIniter);
+
+protected :
+	virtual void NativeConstruct() override;
 
 public :
 	void InitializeShopItemWidget(class UNpcShopWnd* npcShopWnd, FShopItemInfo shopItemInfo);

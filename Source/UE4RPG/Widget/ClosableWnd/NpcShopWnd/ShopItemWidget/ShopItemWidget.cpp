@@ -3,6 +3,9 @@
 #include "Single/GameInstance/RPGGameInstance.h"
 #include "Single/PlayerManager/PlayerManager.h"
 
+#include "Actor/Controller/PlayerController/BasePlayerController.h"
+
+#include "Widget/WidgetController/WidgetController.h"
 #include "Widget/ClosableWnd/NpcShopWnd/NpcShopWnd.h"
 #include "Widget/Slot/ItemSlot/ItemSlot.h"
 #include "Widget/ClosableWnd/NpcShopWnd/TradeWnd/TradeWnd.h"
@@ -18,6 +21,15 @@ UShopItemWidget::UShopItemWidget(const FObjectInitializer& ObjIniter) :
 	static ConstructorHelpers::FObjectFinder<UDataTable> DT_ITEM_INFO(
 		TEXT("DataTable'/Game/Resources/DataTable/DT_ItemInfo.DT_ItemInfo'"));
 	if (DT_ITEM_INFO.Succeeded()) DT_ItemInfo = DT_ITEM_INFO.Object;
+
+	WidgetController = nullptr;
+}
+
+void UShopItemWidget::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	WidgetController = GetManager(UPlayerManager)->GetPlayerController()->GetWidgetController();
 }
 
 void UShopItemWidget::InitializeShopItemWidget(UNpcShopWnd* npcShopWnd, FShopItemInfo shopItemInfo)
@@ -63,20 +75,38 @@ void UShopItemWidget::BuyItem()
 			// 입력 값이 잘못되었을 경우
 			if (tradeWnd->IsInputTextEmpty() || tradeWnd->GetInputTradeCount() == 0)
 			{
-				UE_LOG(LogTemp, Error, 
-					TEXT("UShopItemWidget.cpp :: %d LINE :: 입력 값이 잘못 되었습니다. (처리 필요)"), __LINE__);
+				// 메시지 박스 띄우기
+				WidgetController->CreateMessageBox(
+					TEXT("입력 확인"),
+					TEXT("입력된 내용이 잘못 되었습니다."), 
+					true);
 				return;
 			}
 
-			FString contextString;
-			FItemInfo* itemInfo = DT_ItemInfo->FindRow<FItemInfo>(
-				ShopItemInfo.ItemCode, contextString);
+			FString itemName = tradeWnd->GetConnectedItemSlot()->GetItemInfo()->ItemName.ToString();
+			FString tradeCount = FString::FromInt(tradeWnd->GetInputTradeCount());
 
-			FItemSlotInfo newItemSlotInfo(ShopItemInfo.ItemCode, tradeWnd->GetInputTradeCount(),
-				((itemInfo->ItemType == EItemType::Equipment) ? 1 : itemInfo->MaxSlotCount));
+			UMessageBoxWnd * msgBox = WidgetController->CreateMessageBox(
+				TEXT("아이템 구매 확인"),
+				itemName + FString(TEXT("을(를) ")) + tradeCount + FString(TEXT("개 구매합니다.")),
+				true,
+				EMessageBoxButton::MB_Ok | EMessageBoxButton::MB_Cancel);
 
-			GetManager(UPlayerManager)->GetPlayerInventory()->AddItem(newItemSlotInfo);
+			msgBox->MsgBoxButtonEvents[EMessageBoxButton::MB_Ok].AddLambda(
+				[this, tradeWnd]()
+				{
+					FString contextString;
+					FItemInfo* itemInfo = DT_ItemInfo->FindRow<FItemInfo>(
+						ShopItemInfo.ItemCode, contextString);
 
-			tradeWnd->CloseThisWnd();
+					FItemSlotInfo newItemSlotInfo(ShopItemInfo.ItemCode, tradeWnd->GetInputTradeCount(),
+						((itemInfo->ItemType == EItemType::Equipment) ? 1 : itemInfo->MaxSlotCount));
+
+					GetManager(UPlayerManager)->GetPlayerInventory()->AddItem(newItemSlotInfo);
+
+					tradeWnd->CloseThisWnd();
+				});
+
+
 		});
 }
