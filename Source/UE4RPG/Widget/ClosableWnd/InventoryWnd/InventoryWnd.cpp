@@ -7,6 +7,7 @@
 #include "Widget/WidgetController/WidgetController.h"
 
 #include "Components/GridPanel.h"
+#include "Components/TextBlock.h"
 
 
 
@@ -26,6 +27,8 @@ void UInventoryWnd::NativeConstruct()
 	WndSize = FVector2D(460.0f, 700.0f);
 
 	InitializeInventoryWnd();
+
+	UpdateSilver();
 }
 
 void UInventoryWnd::InitializeInventoryWnd()
@@ -57,4 +60,9 @@ UInventoryItemSlot* UInventoryWnd::CreateItemSlot()
 	ItemSlots.Add(newItemSlot);
 
 	return newItemSlot;
+}
+
+void UInventoryWnd::UpdateSilver()
+{
+	Text_Silver->SetText(FText::FromString(FString::FromInt(GetManager(UPlayerManager)->GetPlayerInfo()->Silver)));
 }

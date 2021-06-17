@@ -20,6 +20,10 @@ private :
 	UPROPERTY(meta = (BindWidget))
 	class UGridPanel* GridPanel_ItemSlots;
 
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock * Text_Silver;
+
+
 public :
 	UInventoryWnd(const FObjectInitializer& objectInitializer);
 
@@ -32,6 +36,10 @@ public :
 private :
 	// 아이템 슬롯을 생성합니다.
 	class UInventoryItemSlot * CreateItemSlot();
+
+public :
+	// 소지금을 갱신합니다.
+	void UpdateSilver();
 
 public :
 	FORCEINLINE TArray<class UInventoryItemSlot*>& GetItemSlots()

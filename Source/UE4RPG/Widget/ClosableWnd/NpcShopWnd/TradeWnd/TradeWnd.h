@@ -68,6 +68,9 @@ public :
 	FORCEINLINE class UItemSlot* GetConnectedItemSlot() const
 	{ return ConnectedItemSlot; }
 
+	FORCEINLINE FShopItemInfo* GetShopItemInfo() const
+	{ return ShopItemInfo; }
+
 
 	
 };

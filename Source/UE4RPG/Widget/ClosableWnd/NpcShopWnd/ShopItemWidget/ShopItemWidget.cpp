@@ -9,6 +9,7 @@
 #include "Widget/ClosableWnd/NpcShopWnd/NpcShopWnd.h"
 #include "Widget/Slot/ItemSlot/ItemSlot.h"
 #include "Widget/ClosableWnd/NpcShopWnd/TradeWnd/TradeWnd.h"
+#include "Widget/ClosableWnd/InventoryWnd/InventoryWnd.h"
 
 #include "Struct/ItemInfo/ItemInfo.h"
 
@@ -102,7 +103,19 @@ void UShopItemWidget::BuyItem()
 					FItemSlotInfo newItemSlotInfo(ShopItemInfo.ItemCode, tradeWnd->GetInputTradeCount(),
 						((itemInfo->ItemType == EItemType::Equipment) ? 1 : itemInfo->MaxSlotCount));
 
-					GetManager(UPlayerManager)->GetPlayerInventory()->AddItem(newItemSlotInfo);
+					// 인벤토리 객체
+					UPlayerInventory* playerInventory = GetManager(UPlayerManager)->GetPlayerInventory();
+
+					// 인벤토리에 아이템 추가
+					playerInventory->AddItem(newItemSlotInfo);
+
+					// 소지금 감소
+					int32 cost = tradeWnd->GetInputTradeCount() * tradeWnd->GetShopItemInfo()->Cost;
+					GetManager(UPlayerManager)->GetPlayerInfo()->Silver -= cost;
+
+					UInventoryWnd* inventoryWnd = playerInventory->GetInventoryWnd();
+					if (IsValid(inventoryWnd))
+						inventoryWnd->UpdateSilver();
 
 					tradeWnd->CloseThisWnd();
 				});
