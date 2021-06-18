@@ -18,6 +18,9 @@ private :
 	int32 ItemSlotIndex;
 
 public :
+	UInventoryItemSlot(const FObjectInitializer & ObjIniter);
+
+public :
 	void InitializeSlot(ESlotType slotType, FName itemCode, int32 itemSlotIndex);
 
 	// 인벤토리 슬롯을 갱신합니다.

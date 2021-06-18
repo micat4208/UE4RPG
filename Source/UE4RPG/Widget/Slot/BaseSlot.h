@@ -14,6 +14,9 @@ class UE4RPG_API UBaseSlot :
 {
 	GENERATED_BODY()
 	
+private :
+	TSubclassOf<class UUserWidget> BP_SlotDragWidget;
+
 public :
 	// 마우스 오른쪽 버튼 클릭 시 발생하는 이벤트입니다.
 	FSlotMouseEvent OnMouseRightButtonClickedEvent;
@@ -26,6 +29,9 @@ protected :
 	/// - 아이템 코드, 스킬 코드
 	FName InCode;
 
+	// 드래깅 작업을 허용하는지를 나타냅니다.
+	bool bAllowDragOperation;
+
 private :
 	UPROPERTY(meta = (BindWidget))
 	class UImage * Image_SlotBackground;
@@ -36,6 +42,9 @@ private :
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock * Text_Count;
 
+public :
+	UBaseSlot(const FObjectInitializer& objIniter);
+
 protected :
 	virtual void NativeConstruct() override;
 
@@ -43,6 +52,28 @@ protected :
 	virtual FReply NativeOnMouseButtonDown(
 		const FGeometry& inGeometry, const FPointerEvent& inMouseEvent) override;
 	/// - FReply : 위젯의 이벤트가 어떠한 방법으로 처리되었는지 알리기 위한 형식
+
+	// 마우스 클릭 입력이 끝날 경우 호출됩니다.
+	virtual FReply NativeOnMouseButtonUp(
+		const FGeometry& inGeometry, const FPointerEvent& inMouseEvent) override;
+
+	// 이 위젯과 마우스 겹침이 시작될 경우 호출됩니다.
+	virtual void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+	// 이 위젯과 마우스 겹침이 끝날 경우 호출됩니다.
+	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
+
+	// 이 위젯에서 드래그가 감지될 경우 호출되는 메서드
+	virtual void NativeOnDragDetected(const FGeometry& InGeometry, 
+		const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation) override;
+	/// - OutOperation : 출력용 매개 변수이며, 감지된 드래그 작업 객체를 반환합니다.
+
+	// 드래그가 끝났을 경우 호출됩니다.
+	virtual bool NativeOnDrop(const FGeometry& InGeometry, 
+		const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
+
+	// 드래그 취소 시 호출됩니다.
+	virtual void NativeOnDragCancelled(const FDragDropEvent& InDragDropEvent, 
+		UDragDropOperation* InOperation) override;
 
 public :
 	// 슬롯을 초기화합니다.
@@ -52,6 +83,19 @@ public :
 	/// - itemCount : 표시시킬 아이템 개수를 전달합니다.
 	/// - bVisibleBelowOne : 1 이하일 경우 숫자 표시 여부를 전달합니다.
 	void SetSlotItemCount(int32 itemCount, bool bVisibleBelowOne = false);
+
+protected :
+	UUserWidget* CreateSlotDragWidget();
+
+private :
+	// 슬롯 배경을 기본 색상으로 표시합니다.
+	void ShowSlotNormalColor();
+
+	// 슬롯 배경을 마우스 겹침 색상으로 표시합니다.
+	void ShowSlotHoveredColor();
+	
+	// 슬롯 배경을 마우스 눌림 색상으로 표시합니다.
+	void ShowSlotPressedColor();
 
 public :
 	FORCEINLINE class UImage* GetSlotImage() const

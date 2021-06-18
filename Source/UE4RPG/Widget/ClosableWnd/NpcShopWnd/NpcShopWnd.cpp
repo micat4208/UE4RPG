@@ -55,7 +55,7 @@ void UNpcShopWnd::SaleItem(UInventoryWnd* inventoryWnd, UItemSlot* itemSlot)
 	if (!tradeWnd) return; 
 
 	tradeWnd->OnTradeButtonClicked.AddLambda(
-		[this, tradeWnd]()
+		[this, tradeWnd, inventoryWnd]()
 		{
 			// 입력 값이 잘못 되었는지 확인합니다.
 			if (tradeWnd->IsInputTextEmpty() || tradeWnd->GetInputTradeCount() == 0)
@@ -80,7 +80,7 @@ void UNpcShopWnd::SaleItem(UInventoryWnd* inventoryWnd, UItemSlot* itemSlot)
 				EMessageBoxButton::MB_Ok | EMessageBoxButton::MB_Cancel);
 
 			msgBox->MsgBoxButtonEvents[EMessageBoxButton::MB_Ok].AddLambda(
-				[this, tradeWnd]()
+				[this, tradeWnd, inventoryWnd]()
 				{
 					UInventoryItemSlot* inventorySlot = Cast<UInventoryItemSlot>(tradeWnd->GetConnectedItemSlot());
 					int32 inputCount = tradeWnd->GetInputTradeCount();
@@ -90,6 +90,10 @@ void UNpcShopWnd::SaleItem(UInventoryWnd* inventoryWnd, UItemSlot* itemSlot)
 						inventorySlot->GetItemSlotIndex(), inputCount);
 
 					// 은화 처리
+					GetManager(UPlayerManager)->GetPlayerInfo()->Silver +=
+						tradeWnd->GetConnectedItemSlot()->GetItemInfo()->Price * inputCount;
+					inventoryWnd->UpdateSilver();
+
 
 					tradeWnd->CloseThisWnd();
 				});
