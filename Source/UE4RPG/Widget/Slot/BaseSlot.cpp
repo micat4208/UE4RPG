@@ -1,6 +1,5 @@
 #include "BaseSlot.h"
 
-#include "Blueprint/WidgetBlueprintLibrary.h"
 
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
@@ -90,14 +89,15 @@ void UBaseSlot::NativeOnDragDetected(const FGeometry& InGeometry,
 {
 	Super::NativeOnDragDetected(InGeometry, InMouseEvent, OutOperation);
 
-	LOG(TEXT("NativeOnDragDetected!"));
-
 	// 드래그 앤 드랍 작업 객체를 생성합니다.
 	OutOperation = UWidgetBlueprintLibrary::CreateDragDropOperation(
-		UDragDropOperation::StaticClass());
+		USlotDragDropOperation::StaticClass());
 
-	// 마우스 위치에 표시되는 위젯을 설정합니다.
-	OutOperation->DefaultDragVisual = CreateSlotDragWidget();
+	USlotDragDropOperation* slotDragDropOp = Cast<USlotDragDropOperation>(OutOperation);
+	slotDragDropOp->OriginatedDragSlot = this;
+
+	// 슬롯 드래그 시작 이벤트 발생
+	OnSlotDragStarted.Broadcast(slotDragDropOp);
 }
 
 bool UBaseSlot::NativeOnDrop(const FGeometry& InGeometry, 
@@ -106,12 +106,16 @@ bool UBaseSlot::NativeOnDrop(const FGeometry& InGeometry,
 {
 	Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
 
+	OnSlotDragFinished.Broadcast(Cast<USlotDragDropOperation>(InOperation));
+
 	return false;
 }
 
 void UBaseSlot::NativeOnDragCancelled(const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
 {
 	Super::NativeOnDragCancelled(InDragDropEvent, InOperation);
+
+	OnSlotDragCancelled.Broadcast(Cast<USlotDragDropOperation>(InOperation));
 }
 
 void UBaseSlot::InitializeSlot(ESlotType slotType, FName inCode)
@@ -129,11 +133,12 @@ void UBaseSlot::SetSlotItemCount(int32 itemCount, bool bVisibleBelowOne)
 	Text_Count->SetText(itemCountText);
 }
 
-UUserWidget* UBaseSlot::CreateSlotDragWidget()
+TTuple<UUserWidget*, UImage*> UBaseSlot::CreateSlotDragWidget()
 {
 	UUserWidget * dragWidget = CreateWidget<UUserWidget>(this, BP_SlotDragWidget);
+	UImage* image_Drag = Cast<UImage>(dragWidget->GetWidgetFromName(TEXT("Image_Drag")));
 
-	return dragWidget;
+	return MakeTuple(dragWidget, image_Drag);
 }
 
 void UBaseSlot::ShowSlotNormalColor()

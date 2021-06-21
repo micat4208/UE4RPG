@@ -2,24 +2,40 @@
 
 #include "UE4RPG.h"
 #include "Blueprint/UserWidget.h"
+
 #include "Enum/SlotType.h"
+
+#include "Blueprint/WidgetBlueprintLibrary.h"
+#include "Widget/Slot/SlotDragDropOperation/SlotDragDropOperation.h"
+
 #include "BaseSlot.generated.h"
 
 
 DECLARE_EVENT(UBaseSlot, FSlotMouseEvent)
+DECLARE_EVENT_OneParam(UBaseSlot, FSlotDragEvent, USlotDragDropOperation*)
 
 UCLASS(Abstract)
 class UE4RPG_API UBaseSlot : 
 	public UUserWidget
 {
 	GENERATED_BODY()
-	
+
 private :
 	TSubclassOf<class UUserWidget> BP_SlotDragWidget;
 
 public :
 	// 마우스 오른쪽 버튼 클릭 시 발생하는 이벤트입니다.
 	FSlotMouseEvent OnMouseRightButtonClickedEvent;
+	
+	// 슬롯 드래그 시작 시 발생하는 이벤트입니다.
+	FSlotDragEvent OnSlotDragStarted;
+
+	// 슬롯 드래그 드랍 시 발생하는 이벤트입니다.
+	FSlotDragEvent OnSlotDragFinished;
+	
+	// 드래그 취소 시 발생하는 이벤트입니다.
+	FSlotDragEvent OnSlotDragCancelled;
+
 
 protected :
 	// 슬롯의 타입을 나타냅니다.
@@ -85,7 +101,11 @@ public :
 	void SetSlotItemCount(int32 itemCount, bool bVisibleBelowOne = false);
 
 protected :
-	UUserWidget* CreateSlotDragWidget();
+	TTuple<UUserWidget*, class UImage *> CreateSlotDragWidget();
+	/// - 튜플
+	/// - 형식의 이름을 가지지 않고, 여러 필드를 담을 수 있는 구조체입니다.
+	/// - TTuple<Types...> 형식으로 선언할 수 있으며, MakeTuple 을 통해 하나의 객체를 생성할 수 있습니다.
+	/// - 생성된 튜플의 필드에는 Get<index>() 로 접근할 수 있습니다.
 
 private :
 	// 슬롯 배경을 기본 색상으로 표시합니다.
@@ -103,5 +123,8 @@ public :
 
 	FORCEINLINE class UTextBlock* GetCountText() const
 	{ return Text_Count; }
+
+	FORCEINLINE ESlotType GetSlotType() const
+	{ return SlotType; }
 
 };

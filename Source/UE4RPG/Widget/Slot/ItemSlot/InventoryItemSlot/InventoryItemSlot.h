@@ -20,6 +20,9 @@ private :
 public :
 	UInventoryItemSlot(const FObjectInitializer & ObjIniter);
 
+protected :
+	virtual void NativeConstruct() override;
+
 public :
 	void InitializeSlot(ESlotType slotType, FName itemCode, int32 itemSlotIndex);
 

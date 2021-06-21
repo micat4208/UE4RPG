@@ -50,6 +50,9 @@ public :
 	///   만약 ITEM_ALL 이 전달된다면 모든 아이템을 제거합니다.
 	void RemoveItem(int32 itemSlotIndex, int32 removeCount = ITEM_ALL);
 
+	// 인벤토리 아이템을 교체합니다.
+	void SwapItem(class UInventoryItemSlot* first, class UInventoryItemSlot* second);
+
 public :
 	FORCEINLINE class UInventoryWnd* GetInventoryWnd() const
 	{ return InventoryWnd; }

@@ -150,6 +150,21 @@ void UPlayerInventory::AddItem(FItemSlotInfo& newItemSlotInfo)
 	}
 }
 
+void UPlayerInventory::SwapItem(class UInventoryItemSlot* first, class UInventoryItemSlot* second)
+{
+	auto playerInfo = GetManager(UPlayerManager)->GetPlayerInfo();
+	TArray<FItemSlotInfo>& inventoryItemInfos = playerInfo->InventoryItemInfos;
+
+	FItemSlotInfo tempItemInfo = inventoryItemInfos[first->GetItemSlotIndex()];
+	inventoryItemInfos[first->GetItemSlotIndex()] = inventoryItemInfos[second->GetItemSlotIndex()];
+	inventoryItemInfos[second->GetItemSlotIndex()] = tempItemInfo;
+
+	first->SetItemInfo(inventoryItemInfos[first->GetItemSlotIndex()].ItemCode);
+	second->SetItemInfo(inventoryItemInfos[second->GetItemSlotIndex()].ItemCode);
+	first->UpdateInventoryItemSlot();
+	second->UpdateInventoryItemSlot();
+}
+
 void UPlayerInventory::RemoveItem(int32 itemSlotIndex, int32 removeCount)
 {
 	FPlayerCharacterInfo* playerInfo = GetManager(UPlayerManager)->GetPlayerInfo();
