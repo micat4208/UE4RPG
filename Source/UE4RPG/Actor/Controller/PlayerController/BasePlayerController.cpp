@@ -5,6 +5,8 @@
 
 #include "Actor/Character/PlayerCharacter/PlayerCharacter.h"
 
+#include "Component/PlayerBehaviorBroadcast/PlayerBehaviorBroadcastComponent.h"
+
 #include "Widget/WidgetController/WidgetController.h"
 
 ABasePlayerController::ABasePlayerController()
@@ -12,6 +14,8 @@ ABasePlayerController::ABasePlayerController()
 	static ConstructorHelpers::FClassFinder<UWidgetController> BP_WIDGET_CONTROLLER(
 		TEXT("WidgetBlueprint'/Game/Blueprints/Widget/WidgetController/BP_WidgetController.BP_WidgetController_C'"));
 	if (BP_WIDGET_CONTROLLER.Succeeded()) BP_WidgetController = BP_WIDGET_CONTROLLER.Class;
+
+	PlayerBehaviorBroadcast = CreateDefaultSubobject<UPlayerBehaviorBroadcastComponent>(TEXT("PLAYER_BH_BROADCAST_COMPONENT"));
 
 	DefaultInputMode = EInputModeType::IM_GameOnly;
 	bDefaultCursotVisibility = false;

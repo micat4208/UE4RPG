@@ -53,6 +53,9 @@ public :
 	// 인벤토리 아이템을 교체합니다.
 	void SwapItem(class UInventoryItemSlot* first, class UInventoryItemSlot* second);
 
+	// 인벤토리 아이템을 합칩니다.
+	void MergeItem(class UInventoryItemSlot* ori, class UInventoryItemSlot* target);
+
 public :
 	FORCEINLINE class UInventoryWnd* GetInventoryWnd() const
 	{ return InventoryWnd; }

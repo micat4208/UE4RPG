@@ -17,6 +17,7 @@ private :
 
 private :
 	class UWidgetController* WidgetController;
+	class UPlayerBehaviorBroadcastComponent* PlayerBehaviorBroadcast;
 
 protected :
 	// 기본 입력 모드를 나타냅니다.
@@ -34,6 +35,9 @@ protected :
 public :
 	FORCEINLINE class UWidgetController* GetWidgetController() const
 	{ return WidgetController; }
+
+	FORCEINLINE class UPlayerBehaviorBroadcastComponent* GetPlayerBehaviorBroadcast() const
+	{ return PlayerBehaviorBroadcast; }
 
 	FORCEINLINE bool GetDefaultCursotVisibility() const
 	{ return bDefaultCursotVisibility; }

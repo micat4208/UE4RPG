@@ -1,7 +1,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
 #include "Struct/ItemSlotInfo/ItemSlotInfo.h"
+
+#include "Enum/CharacterStatusAttribute.h"
+
 #include "PlayerCharacterInfo.generated.h"
 
 // 플레이어 캐릭터의 기반 정보를 나타낼 때 사용되는 구조체입니다.
@@ -23,6 +27,10 @@ public:
 	// 소지금
 	UPROPERTY()
 	int32 Silver;
+
+	// 상태 속성
+	UPROPERTY()
+	TMap<ECharacterStatusAttribute, float> StatusAttributes;
 
 public :
 	FPlayerCharacterInfo();

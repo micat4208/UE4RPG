@@ -165,6 +165,47 @@ void UPlayerInventory::SwapItem(class UInventoryItemSlot* first, class UInventor
 	second->UpdateInventoryItemSlot();
 }
 
+void UPlayerInventory::MergeItem(UInventoryItemSlot* ori, UInventoryItemSlot* target)
+{
+	FPlayerCharacterInfo* playerInfo = GetManager(UPlayerManager)->GetPlayerInfo();
+	FItemSlotInfo& oriItemSlotInfo = playerInfo->InventoryItemInfos[ori->GetItemSlotIndex()];
+	FItemSlotInfo& targetItemSlotInfo = playerInfo->InventoryItemInfos[target->GetItemSlotIndex()];
+
+	// 슬롯에 들어갈 수 잇는 최대 아이템 개수
+	int32 maxSlotCount = ori->GetItemInfo()->MaxSlotCount;
+
+	// ori 나 target 둘 중 하나라도 최대 개수라면 스왑이 일어나도록 합니다.
+	if (oriItemSlotInfo.ItemCount == maxSlotCount ||
+		targetItemSlotInfo.ItemCount == maxSlotCount)
+		Swap(ori, target);
+
+	// 채울 수 있는 공간이 존재한다면
+	else
+	{
+		// 추가 가능한 아이템 개수를 계산합니다.
+		int32 addable = maxSlotCount - targetItemSlotInfo.ItemCount;
+
+		// 추가 가능한 아이템의 개수가 클 경우
+		if (addable > oriItemSlotInfo.ItemCount)
+			addable = oriItemSlotInfo.ItemCount;
+
+		// 아이템을 옮깁니다.
+		oriItemSlotInfo.ItemCount -= addable;
+		targetItemSlotInfo.ItemCount += addable;
+
+		// 옮긴 후 슬롯이 비어있다면
+		if (oriItemSlotInfo.ItemCount == 0)
+		{
+			oriItemSlotInfo.Clear();
+			ori->SetItemInfo(FName());
+		}
+
+		// 슬롯 갱신
+		ori->UpdateInventoryItemSlot();
+		target->UpdateInventoryItemSlot();
+	}
+}
+
 void UPlayerInventory::RemoveItem(int32 itemSlotIndex, int32 removeCount)
 {
 	FPlayerCharacterInfo* playerInfo = GetManager(UPlayerManager)->GetPlayerInfo();

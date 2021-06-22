@@ -12,4 +12,8 @@ FPlayerCharacterInfo::FPlayerCharacterInfo()
 		InventoryItemInfos.Add(FItemSlotInfo());
 
 	InventoryItemInfos[0] = (FItemSlotInfo(FName(TEXT("90009")), 3, 100));
+
+	StatusAttributes.Add(ECharacterStatusAttribute::MaxHp, 1000.0f);
+	StatusAttributes.Add(ECharacterStatusAttribute::Hp, 900.0f);
+
 }

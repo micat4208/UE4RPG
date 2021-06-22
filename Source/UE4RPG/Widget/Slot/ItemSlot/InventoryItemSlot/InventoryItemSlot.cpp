@@ -47,14 +47,32 @@ void UInventoryItemSlot::NativeConstruct()
 			{
 				UInventoryItemSlot* originatedDragSlot = Cast<UInventoryItemSlot>(dragDropOp->OriginatedDragSlot);
 
+				// 드래그 된 슬롯이 비어있다면 실행 X
+				if (originatedDragSlot->GetItemInfo()->IsEmpty()) return;
+
+				FPlayerCharacterInfo* playerInfo = GetManager(UPlayerManager)->GetPlayerInfo();
+
+				bool bIsSameItem =
+					playerInfo->InventoryItemInfos[originatedDragSlot->GetItemSlotIndex()].ItemCode ==
+					playerInfo->InventoryItemInfos[GetItemSlotIndex()].ItemCode;
+
 				// 드래그를 시작시킨 슬롯과 드랍을 시킨 위치의 슬롯에 담긴 아이템이 동일한 아이템이라면 아이템 합침
+				if (bIsSameItem)
+					GetManager(UPlayerManager)->GetPlayerInventory()->MergeItem(originatedDragSlot, this);
 				// 다른 아이템이라면 스왑
-				GetManager(UPlayerManager)->GetPlayerInventory()->SwapItem(originatedDragSlot, this);
+				else GetManager(UPlayerManager)->GetPlayerInventory()->SwapItem(originatedDragSlot, this);
 			}
 
 
 		});
 
+	OnMouseRightButtonClickedEvent.AddLambda(
+		[this]() 
+		{
+			if (GetItemInfo()->IsEmpty()) return;
+			if (GetItemInfo()->ItemType == EItemType::Consumption);
+		
+		});
 }
 
 void UInventoryItemSlot::InitializeSlot(ESlotType slotType, FName itemCode, int32 itemSlotIndex)
