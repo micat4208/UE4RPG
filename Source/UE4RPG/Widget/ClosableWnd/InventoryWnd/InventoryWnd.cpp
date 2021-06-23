@@ -18,6 +18,8 @@ UInventoryWnd::UInventoryWnd(const FObjectInitializer& objectInitializer) :
 		TEXT("WidgetBlueprint'/Game/Blueprints/Widget/Slot/BP_InventoryItemSlot.BP_InventoryItemSlot_C'"));
 	if (BP_INVENTORY_ITEM_SLOT.Succeeded()) BP_InventoryItemSlot = BP_INVENTORY_ITEM_SLOT.Class;
 
+	bIsTradeMode = false;
+
 }
 
 void UInventoryWnd::NativeConstruct()
@@ -42,6 +44,9 @@ void UInventoryWnd::InitializeInventoryWnd()
 	for (int32 i = 0; i < inventorySlotCount; ++i)
 	{
 		auto newItemSlot = CreateItemSlot();
+
+		newItemSlot->InventoryWnd = this;
+
 		newItemSlot->InitializeSlot(
 			ESlotType::InventorySlot,
 			playerInfo->InventoryItemInfos[i].ItemCode, i);

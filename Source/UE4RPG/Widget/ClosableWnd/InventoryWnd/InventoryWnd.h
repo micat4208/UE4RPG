@@ -23,6 +23,9 @@ private :
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock * Text_Silver;
 
+public :
+	bool bIsTradeMode;
+
 
 public :
 	UInventoryWnd(const FObjectInitializer& objectInitializer);

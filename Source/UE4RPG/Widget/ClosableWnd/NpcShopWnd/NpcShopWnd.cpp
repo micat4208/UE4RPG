@@ -150,6 +150,8 @@ void UNpcShopWnd::FloatingInventoryWnd()
 	auto inventoryWnd = GetManager(UPlayerManager)->GetPlayerInventory()->CreateInventoryWnd(
 		widgetController, EInputModeType::IM_Default, true);
 
+	inventoryWnd->bIsTradeMode = true;
+
 	// npc 상점 창 절반 크기를 얻습니다.
 	FVector2D npcShopWndHalfSize = WndSize * 0.5f;
 

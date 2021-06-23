@@ -3,6 +3,11 @@
 #include "Single/GameInstance/RPGGameInstance.h"
 #include "Single/PlayerManager/PlayerManager.h"
 
+#include "Actor/Controller/PlayerController/BasePlayerController.h"
+
+#include "Widget/ClosableWnd/InventoryWnd/InventoryWnd.h"
+
+#include "Component/PlayerBehaviorBroadcast/PlayerBehaviorBroadcastComponent.h"
 #include "Components/Image.h"
 
 UInventoryItemSlot::UInventoryItemSlot(const FObjectInitializer& ObjIniter) :
@@ -10,6 +15,8 @@ UInventoryItemSlot::UInventoryItemSlot(const FObjectInitializer& ObjIniter) :
 {
 	// 이 슬롯에서 드래깅 작업을 허용합니다.
 	bAllowDragOperation = true;
+
+	InventoryWnd = nullptr;
 }
 
 void UInventoryItemSlot::NativeConstruct()
@@ -69,9 +76,11 @@ void UInventoryItemSlot::NativeConstruct()
 	OnMouseRightButtonClickedEvent.AddLambda(
 		[this]() 
 		{
+			if (InventoryWnd->bIsTradeMode) return;
 			if (GetItemInfo()->IsEmpty()) return;
-			if (GetItemInfo()->ItemType == EItemType::Consumption);
-		
+			if (GetItemInfo()->ItemType == EItemType::Consumption)
+				GetManager(UPlayerManager)->GetPlayerController()->GetPlayerBehaviorBroadcast()->UseInventoryItem(
+					GetItemSlotIndex());
 		});
 }
 

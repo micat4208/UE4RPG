@@ -26,9 +26,6 @@ private :
 public:	
 	UPlayerBehaviorBroadcastComponent();
 
-protected:
-	virtual void BeginPlay() override;
-
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
@@ -41,6 +38,10 @@ public :
 	/// - inventorySlotIndex : 사용된 인벤토리 슬롯을 전달합니다.
 	/// - useCount : 사용 개수를 전달합니다.
 	void UseInventoryItem(int32 inventorySlotIndex, int32 useCount = 1);
+
+public :
+	FORCEINLINE FPlayerBehaviorEvent& operator[](EPlayerBehavior::Type behaviorType)
+	{ return PlayerBehaviorEvents[behaviorType]; }
 
 
 

@@ -18,6 +18,9 @@ private :
 	int32 ItemSlotIndex;
 
 public :
+	class UInventoryWnd* InventoryWnd;
+
+public :
 	UInventoryItemSlot(const FObjectInitializer & ObjIniter);
 
 protected :

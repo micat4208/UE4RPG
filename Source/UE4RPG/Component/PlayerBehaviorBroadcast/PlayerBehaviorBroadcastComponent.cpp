@@ -14,11 +14,6 @@ UPlayerBehaviorBroadcastComponent::UPlayerBehaviorBroadcastComponent()
 	PlayerBehaviorEvents.Add(BH_UseInventoryItem, FPlayerBehaviorEvent());
 }
 
-void UPlayerBehaviorBroadcastComponent::BeginPlay()
-{
-	Super::BeginPlay();
-}
-
 void UPlayerBehaviorBroadcastComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);

@@ -22,6 +22,12 @@ UWidgetController::UWidgetController(const FObjectInitializer& objIniter) :
 
 void UWidgetController::ResetInputMode(bool bForceChange)
 {
+	// 모든 위젯들이 닫혀 있음을 나타냅니다.
+	bool bAllWidgetClosed = true;
+
+	// 할당된 Widget 들중 닫힘 확인 위젯이 추가되어 있는지 확인합니다.
+	
+
 	// bForceChange 가 true 이거나, 열린 위젯의 개수가 존재하지 않는다면 입력 모드 초기화
 	if (bForceChange || (AllocatedWidgets.Num() == 0 && AllocatedWnds.Num() == 0))
 	{
@@ -72,11 +78,14 @@ UMessageBoxWnd* UWidgetController::CreateMessageBox(FText titleText, FText msg, 
 
 void UWidgetController::AddChildWidget(
 	UUserWidget* childWidgetInstance, 
+	bool bIgnoreThisWidget,
 	EInputModeType changeInputMode,
 	bool bShowMouseCursor,
 	float width, float height)
 {
 	AllocatedWidgets.Add(childWidgetInstance);
+
+	if (bIgnoreThisWidget) IgnoreWidgets.Add(childWidgetInstance);
 
 	// 전달할 위젯 객체를 화면에 띄웁니다.
 	CanvasPanel_WidgetParent->AddChild(childWidgetInstance);
@@ -101,6 +110,10 @@ void UWidgetController::CloseChildWidget(UUserWidget* childWidgetInstance)
 	CanvasPanel_WidgetParent->RemoveChild(childWidgetInstance);
 	//childWidgetInstance->RemoveFromParent();
 
+	// 닫힘 확인에서 제외시킬 위젯이 닫힌다면 IgnoreWidgets 에서 요소를 제거합니다.
+	if (IgnoreWidgets.Contains(childWidgetInstance))
+		IgnoreWidgets.Remove(childWidgetInstance);
+
 	// 입력 모드 초기화
 	ResetInputMode();
 }
@@ -108,6 +121,7 @@ void UWidgetController::CloseChildWidget(UUserWidget* childWidgetInstance)
 UClosableWnd* UWidgetController::CreateWnd(
 	TSubclassOf<UClosableWnd> wndClass,
 	bool bUsePrevPosition,
+	bool bIgnoreThisWidget,
 	EInputModeType changeInputMode,
 	bool bShowMouseCursor,
 	float alignmentX, float alignmentY,
@@ -120,6 +134,8 @@ UClosableWnd* UWidgetController::CreateWnd(
 	newClosableWnd->WidgetController = this;
 
 	AllocatedWnds.Add(newClosableWnd);
+
+	if (bIgnoreThisWidget) IgnoreWidgets.Add(newClosableWnd);
 
 	// CanvasPanel_WndParent 의 자식 위젯으로 추가합니다.
 	CanvasPanel_WndParent->AddChild(newClosableWnd);
@@ -166,6 +182,10 @@ void UWidgetController::CloseWnd(bool bAllClose, UClosableWnd* closableWnd)
 			// 닫힘 처리되지 않은 창이라면
 			if (!wnd->bBeClose)
 			{
+				// 닫힘 확인에서 제외시킬 창이 닫힌다면 IgnoreWidgets 에서 요소를 제거합니다.
+				if (IgnoreWidgets.Contains(wnd))
+					IgnoreWidgets.Remove(wnd);
+
 				// 창 닫힘 이벤트
 				if (wnd->OnWndClosed.IsBound())
 					wnd->OnWndClosed.Broadcast();
@@ -195,6 +215,9 @@ void UWidgetController::CloseWnd(bool bAllClose, UClosableWnd* closableWnd)
 		// 닫힘 처리되지 않은 창이라면
 		if (!closableWnd->bBeClose)
 		{
+			// 닫힘 확인에서 제외시킬 창이 닫힌다면 IgnoreWidgets 에서 요소를 제거합니다.
+			if (IgnoreWidgets.Contains(closableWnd))
+				IgnoreWidgets.Remove(closableWnd);
 
 			// 창 닫힘 이벤트
 			if (closableWnd->OnWndClosed.IsBound())
