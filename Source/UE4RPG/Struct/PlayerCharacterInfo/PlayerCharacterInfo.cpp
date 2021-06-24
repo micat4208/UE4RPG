@@ -17,3 +17,38 @@ FPlayerCharacterInfo::FPlayerCharacterInfo()
 	StatusAttributes.Add(ECharacterStatusAttribute::Hp, 900.0f);
 
 }
+
+void FPlayerCharacterInfo::SetStatusAttributes(ECharacterStatusAttribute statusAttributes, float value)
+{
+	if (StatusAttributes.Contains(statusAttributes))
+	{
+		// 변경 전 수치를 저장합니다.
+		float prevValue = StatusAttributes[statusAttributes];
+
+		// 수치를 변경시킵니다.
+		StatusAttributes[statusAttributes] = value;
+
+		// 수치 변경 대리자 호출
+		if (OnStatusAttributesChanged.IsBound())
+			OnStatusAttributesChanged.Broadcast(statusAttributes, prevValue, value);
+		/// - 첫 번째 : 변경시킨 상태 속성
+		/// - 두 번째 : 변경 전 상태 속성 수치
+		/// - 세 번째 : 변경 후 상태 속성 수치
+	}
+
+}
+
+void FPlayerCharacterInfo::AddStatusAttributes(ECharacterStatusAttribute statusAttributes, float value)
+{
+	if (StatusAttributes.Contains(statusAttributes))
+	{
+		// 변경 전 수치를 저장합니다.
+		float prevValue = StatusAttributes[statusAttributes];
+
+		// 수치를 변경시킵니다.
+		float currentValue = StatusAttributes[statusAttributes] += value;
+
+		if (OnStatusAttributesChanged.IsBound())
+			OnStatusAttributesChanged.Broadcast(statusAttributes, prevValue, currentValue);
+	}
+}

@@ -26,10 +26,32 @@ void UWidgetController::ResetInputMode(bool bForceChange)
 	bool bAllWidgetClosed = true;
 
 	// 할당된 Widget 들중 닫힘 확인 위젯이 추가되어 있는지 확인합니다.
+	for (auto widget : AllocatedWidgets)
+	{
+		// 만약 닫힘 확인을 하지 않을 위젯이 추가되어 있다면, 모든 위젯이 아직 닫히지 않음 상태로 설정합니다.
+		if (!IgnoreWidgets.Contains(widget))
+		{
+			bAllWidgetClosed = false;
+			break;
+		}
+	}
+
+	// AllocatedWidget 에서 닫힘 확인을 하지 않을 위젯을 찾지 못했다면 할당된 창에서도 찾습니다.
+	if (bAllWidgetClosed)
+	{
+		for (auto wnd : AllocatedWnds)
+		{
+			if (!IgnoreWidgets.Contains(wnd))
+			{
+				bAllWidgetClosed = false;
+				break;
+			}
+		}
+	}
 	
 
 	// bForceChange 가 true 이거나, 열린 위젯의 개수가 존재하지 않는다면 입력 모드 초기화
-	if (bForceChange || (AllocatedWidgets.Num() == 0 && AllocatedWnds.Num() == 0))
+	if (bForceChange || bAllWidgetClosed)
 	{
 		// 입력 모드를 초기화
 		PlayerController->ChangeInputModeToDefault();

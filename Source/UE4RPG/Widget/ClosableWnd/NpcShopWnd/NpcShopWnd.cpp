@@ -134,7 +134,7 @@ UTradeWnd* UNpcShopWnd::CreateTradeWnd(
 
 
 	TradeWnd = Cast<UTradeWnd>(WidgetController->CreateWnd(
-		BP_TradeWnd, true, EInputModeType::IM_Default, true));
+		BP_TradeWnd, true, false, EInputModeType::IM_Default, true));
 
 	TradeWnd->InitializeTradeWnd(seller, connectedItemSlot, shopItemInfo);
 

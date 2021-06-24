@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CoreMinimal.h"
+#include "UE4RPG.h"
 #include "Blueprint/UserWidget.h"
 #include "PlayerHUD.generated.h"
 
@@ -19,5 +19,9 @@ private :
 	
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock * Text_Level;
-	
+
+
+protected :
+	virtual void NativeConstruct() override;
+
 };

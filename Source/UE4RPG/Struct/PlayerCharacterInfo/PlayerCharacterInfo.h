@@ -8,11 +8,21 @@
 
 #include "PlayerCharacterInfo.generated.h"
 
+// 플레이어의 상태 속성이 변경되었을 경우 호출되는 대리자 형식
+DECLARE_MULTICAST_DELEGATE_ThreeParams(FOnStatusAttributesChanged, ECharacterStatusAttribute, float, float)
+/// - Param1 : 변경된 상태 속성 타입
+/// - Param2 : 변경 정 수치
+/// - Param3 : 변경된 수치
+
 // 플레이어 캐릭터의 기반 정보를 나타낼 때 사용되는 구조체입니다.
 USTRUCT()
 struct UE4RPG_API FPlayerCharacterInfo
 {
 	GENERATED_USTRUCT_BODY()
+
+public :
+	// 플레이어의 상태 속성 수치가 변경되었을 경우 호출되는 대리자입니다.
+	FOnStatusAttributesChanged OnStatusAttributesChanged;
 
 public:
 	
@@ -34,6 +44,12 @@ public:
 
 public :
 	FPlayerCharacterInfo();
+
+	// statusAttributes 에 해당하는 상태 속성의 수치를 value 로 설정합니다.
+	void SetStatusAttributes(ECharacterStatusAttribute statusAttributes, float value);
+
+	// statusAttributes 에 해당하는 상태 속성의 수치에 value 를 더합니다.
+	void AddStatusAttributes(ECharacterStatusAttribute statusAttributes, float value);
 
 
 };

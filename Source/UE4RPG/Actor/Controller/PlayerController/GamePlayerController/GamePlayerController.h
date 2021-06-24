@@ -15,6 +15,9 @@ class UE4RPG_API AGamePlayerController :
 private :
 	TSubclassOf<class UPlayerHUD> BP_PlayerHUD;
 
+	class UDataTable* DT_ItemInfo;
+	class UDataTable* DT_ItemBehaviorInfo;
+
 public :
 	AGamePlayerController();
 

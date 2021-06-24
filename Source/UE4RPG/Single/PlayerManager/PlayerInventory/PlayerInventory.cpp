@@ -26,7 +26,7 @@ UInventoryWnd* UPlayerInventory::CreateInventoryWnd(
 
 	// Ã¢À» ¶ç¿ó´Ï´Ù.
 	InventoryWnd = Cast<UInventoryWnd>(
-		widgetController->CreateWnd(BP_InventoryWnd, true, changeInputMode, bShowCursor));
+		widgetController->CreateWnd(BP_InventoryWnd, true, false, changeInputMode, bShowCursor));
 
 	// Ã¢ÀÌ ´ÝÈú ¶§ InventoryWnd °¡ nullptr °¡ µÉ¼ö ÀÖµµ·Ï ÇÕ´Ï´Ù.
 	InventoryWnd->OnWndClosed.AddLambda(

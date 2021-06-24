@@ -9,11 +9,23 @@
 #include "Component/PlayerBehaviorBroadcast/PlayerBehaviorBroadcastComponent.h"
 #include "Components/CanvasPanelSlot.h"
 
+#include "Struct/ItemBehaviorInfo/ItemBehaviorInfo.h"
+#include "Struct/ItemInfo/ItemInfo.h"
+
 AGamePlayerController::AGamePlayerController()
 {
 	static ConstructorHelpers::FClassFinder<UPlayerHUD> BP_PLAYER_HUD(
 		TEXT("WidgetBlueprint'/Game/Blueprints/Widget/PlayerHUD/BP_PlayerHUD.BP_PlayerHUD_C'"));
 	if (BP_PLAYER_HUD.Succeeded()) BP_PlayerHUD = BP_PLAYER_HUD.Class;
+
+	static ConstructorHelpers::FObjectFinder<UDataTable> DT_ITEM_BEHAVIOR_INFO(
+		TEXT("DataTable'/Game/Resources/DataTable/DT_ItemBehaviorInfo.DT_ItemBehaviorInfo'"));
+	if (DT_ITEM_BEHAVIOR_INFO.Succeeded()) DT_ItemBehaviorInfo = DT_ITEM_BEHAVIOR_INFO.Object;
+	
+	static ConstructorHelpers::FObjectFinder<UDataTable> DT_ITEM_INFO(
+		TEXT("DataTable'/Game/Resources/DataTable/DT_ItemInfo.DT_ItemInfo'"));
+	if (DT_ITEM_INFO.Succeeded()) DT_ItemInfo = DT_ITEM_INFO.Object;
+
 }
 
 void AGamePlayerController::SetupInputComponent()
@@ -50,6 +62,26 @@ void AGamePlayerController::OnPossess(APawn* pawn)
 			GetManager(UPlayerManager)->GetPlayerInventory()->RemoveItem(
 				inventoryItemSlotIndex,
 				bhData.GetItemCount());
+
+			// 사용된 아이템 코드를 얻습니다.
+			FName usedItemCode = bhData.GetCode();
+
+			// 사용된 아이템 정보를 얻습니다.
+			FString contextString;
+			FItemInfo * usedItemInfo = DT_ItemInfo->FindRow<FItemInfo>(usedItemCode, contextString);
+
+			// 아이템 사용 효과 코드를 얻습니다.
+			if (usedItemInfo->ItemBehaviorCode.IsNone()) return;
+			FItemBehaviorInfo* itemBHInfo = DT_ItemBehaviorInfo->FindRow<FItemBehaviorInfo>(
+				usedItemInfo->ItemBehaviorCode, contextString);
+
+			// 아이템 사용에 대한 처리를 합니다.
+			for (auto itemBehavior : itemBHInfo->ItemBehaviors)
+			{
+				GetManager(UPlayerManager)->GetPlayerInfo()->AddStatusAttributes(
+					itemBehavior.Key, itemBehavior.Value);
+			}
+
 		});
 
 #pragma endregion
@@ -60,7 +92,7 @@ void AGamePlayerController::OnPossess(APawn* pawn)
 void AGamePlayerController::CreatePlayerHUD()
 {
 	UPlayerHUD * playerHUD = CreateWidget<UPlayerHUD>(this, BP_PlayerHUD);
-	GetWidgetController()->AddChildWidget(playerHUD, EInputModeType::IM_Default, false, 400.0f, 120.0f);
+	GetWidgetController()->AddChildWidget(playerHUD, true, EInputModeType::IM_Default, false, 400.0f, 120.0f);
 
 	UCanvasPanelSlot* canvasPanelSlot = Cast<UCanvasPanelSlot>(playerHUD->Slot);
 	canvasPanelSlot->SetPosition(FVector2D(50.0f, 50.0f));

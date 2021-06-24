@@ -40,6 +40,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "기본")
 	int32 Price;
 
+	// 아이템 동작 코드
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "아이템 사용")
+	FName ItemBehaviorCode;
+
 public :
 	FItemInfo();
 
