@@ -40,6 +40,10 @@ public :
 	void ToggleInventoryWnd(class UWidgetController* widgetController);
 
 public :
+	// 플레이어 캐릭터의 비쥬얼을 갱신합니다.
+	void UpdateCharacterVisual();
+
+public :
 	// 아이템을 인벤토리에 추가합니다.
 	/// - newItemSlotInfo : 인벤토리에 추가시킬 아이템 정보를 전달합니다.
 	void AddItem(FItemSlotInfo& newItemSlotInfo);

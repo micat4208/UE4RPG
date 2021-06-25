@@ -48,6 +48,20 @@ void UPlayerInventory::ToggleInventoryWnd(UWidgetController* widgetController)
 	else CreateInventoryWnd(widgetController, EInputModeType::IM_GameAndUI, true);
 }
 
+void UPlayerInventory::UpdateCharacterVisual()
+{
+	// 장착 가능한 모든 파츠 타입을 얻습니다.
+	TArray<EPartsType> equipItemPartsTypes;
+	GetManager(UPlayerManager)->GetPlayerInfo()->PartsInfos.GetKeys(equipItemPartsTypes);
+	/// - TMap.GetKeys(&TArray<KeyType> outKeys) : TMap 요소의 모든 키를 배열로 반환합니다.
+	/// - outKeys : 출력용 매개 변수이며, TMap 요소들의 키를 저장시킬 배열을 전달합니다.
+	
+	// TODO
+	// 모든 파츠 비쥬얼을 갱신합니다.
+
+
+}
+
 void UPlayerInventory::AddItem(FItemSlotInfo& newItemSlotInfo)
 {
 	auto playerInfo = GetManager(UPlayerManager)->GetPlayerInfo();

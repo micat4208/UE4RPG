@@ -13,6 +13,16 @@ void UPlayerManager::RegisterPlayer(
 
 }
 
+void UPlayerManager::InitializePlayerCharacter()
+{
+	// 모든 파츠 비우기
+	GetPlayerCharacter()->ClearAllPartsMesh();
+
+	// 비쥬얼 갱신
+
+
+}
+
 void UPlayerManager::InitManagerClass()
 {
 	PlayerInventory = NewObject<UPlayerInventory>(this, UPlayerInventory::StaticClass(),

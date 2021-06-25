@@ -36,6 +36,9 @@ public :
 	void RegisterPlayer(class ABasePlayerController* newPlayerController,
 		class APlayerCharacter* newPlayerCharacter);
 
+	// PlayerInfo 에 설정된 캐릭터 클래스 타입에 따라 캐릭터를 초기화합니다.
+	void InitializePlayerCharacter();
+
 	virtual void InitManagerClass() override;
 	virtual void ShutdownManagerClass() override;
 

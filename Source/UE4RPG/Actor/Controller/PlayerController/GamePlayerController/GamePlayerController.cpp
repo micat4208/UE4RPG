@@ -44,6 +44,9 @@ void AGamePlayerController::OnPossess(APawn* pawn)
 {
 	Super::OnPossess(pawn);
 
+	// 캐릭터 초기화
+	GetManager(UPlayerManager)->InitializePlayerCharacter();
+
 #pragma region Register Item Use Event
 	// 인벤토리 아이템 사용에 대한 이벤트 처리
 	(*GetPlayerBehaviorBroadcast())[EPlayerBehavior::BH_UseInventoryItem].AddLambda(

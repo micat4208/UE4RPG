@@ -21,6 +21,14 @@ APlayerCharacter::APlayerCharacter()
 	CharacterMovementHelper = CreateDefaultSubobject<UCharacterMovementHelperComponent>(TEXT("CHARACTER_MOVEMENT_HELPER"));
 	PlayerInteract = CreateDefaultSubobject<UPlayerInteractComponent>(TEXT("PLAYER_INTERACT_COMPONENT"));
 
+	HeadMesh		= GetMesh();
+	HairMesh		= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SK_HAIR"));
+	TopMesh			= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SK_TOP"));
+	BottomMesh		= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SK_BOTTOM"));
+	RightGloveMesh	= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SK_RGLOVE"));
+	LeftGloveMesh	= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SK_LGLOVE"));
+	ShoesMesh		= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SK_SHOES"));
+
 	SpringArm->SetupAttachment(GetRootComponent());
 	Camera->SetupAttachment(SpringArm);
 
@@ -48,6 +56,14 @@ APlayerCharacter::APlayerCharacter()
 	// 회전 속도를 설정합니다.
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 720.0f, 0.0f);
 
+	HairMesh->SetupAttachment(HeadMesh);
+	TopMesh->SetupAttachment(HeadMesh);
+	BottomMesh->SetupAttachment(HeadMesh);
+	RightGloveMesh->SetupAttachment(HeadMesh);
+	LeftGloveMesh->SetupAttachment(HeadMesh);
+	ShoesMesh->SetupAttachment(HeadMesh);
+
+
 }
 
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -69,4 +85,13 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAxis(TEXT("Vertical"),
 		CharacterMovementHelper, &UCharacterMovementHelperComponent::InputVertical);
 
+}
+
+void APlayerCharacter::ClearAllPartsMesh()
+{
+	for (auto partsMeshComponent : Parts)
+	{
+		if (IsValid(partsMeshComponent.Value))
+			partsMeshComponent.Value->SetSkeletalMesh(nullptr);
+	}
 }

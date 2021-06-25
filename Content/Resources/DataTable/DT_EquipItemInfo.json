@@ -1,0 +1,198 @@
+[
+	{
+		"Name": "11000",
+		"PartsType": "PT_Bottom",
+		"MeshPath":
+		{
+			"AssetPathName": "/Game/Resources/Character/GhostLady_S1/Meshes/Characters/Separates/BotBodies/SK_BotBodyC.SK_BotBodyC",
+			"SubPathString": ""
+		},
+		"SetMeshPath":
+		{
+			"AssetPathName": "None",
+			"SubPathString": ""
+		}
+	},
+	{
+		"Name": "11001",
+		"PartsType": "PT_Bottom",
+		"MeshPath":
+		{
+			"AssetPathName": "/Game/Resources/Character/GhostLady_S1/Meshes/Characters/Separates/BotBodies/SK_BotBodyB.SK_BotBodyB",
+			"SubPathString": ""
+		},
+		"SetMeshPath":
+		{
+			"AssetPathName": "None",
+			"SubPathString": ""
+		}
+	},
+	{
+		"Name": "11002",
+		"PartsType": "PT_Bottom",
+		"MeshPath":
+		{
+			"AssetPathName": "/Game/Resources/Character/GhostLady_S1/Meshes/Characters/Separates/BotBodies/SK_BotBodyA.SK_BotBodyA",
+			"SubPathString": ""
+		},
+		"SetMeshPath":
+		{
+			"AssetPathName": "None",
+			"SubPathString": ""
+		}
+	},
+	{
+		"Name": "21000",
+		"PartsType": "PT_Top",
+		"MeshPath":
+		{
+			"AssetPathName": "/Game/Resources/Character/GhostLady_S1/Meshes/Characters/Separates/TopBodies/SK_TopBodyC.SK_TopBodyC",
+			"SubPathString": ""
+		},
+		"SetMeshPath":
+		{
+			"AssetPathName": "None",
+			"SubPathString": ""
+		}
+	},
+	{
+		"Name": "21001",
+		"PartsType": "PT_Top",
+		"MeshPath":
+		{
+			"AssetPathName": "/Game/Resources/Character/GhostLady_S1/Meshes/Characters/Separates/TopBodies/SK_TopBodyB.SK_TopBodyB",
+			"SubPathString": ""
+		},
+		"SetMeshPath":
+		{
+			"AssetPathName": "None",
+			"SubPathString": ""
+		}
+	},
+	{
+		"Name": "21002",
+		"PartsType": "PT_Top",
+		"MeshPath":
+		{
+			"AssetPathName": "/Game/Resources/Character/GhostLady_S1/Meshes/Characters/Separates/TopBodies/SK_TopBodyA1.SK_TopBodyA1",
+			"SubPathString": ""
+		},
+		"SetMeshPath":
+		{
+			"AssetPathName": "None",
+			"SubPathString": ""
+		}
+	},
+	{
+		"Name": "31000",
+		"PartsType": "PT_Glove",
+		"MeshPath":
+		{
+			"AssetPathName": "/Game/Resources/Character/GhostLady_S1/Meshes/Characters/Separates/Hands/SK_Hand_R.SK_Hand_R",
+			"SubPathString": ""
+		},
+		"SetMeshPath":
+		{
+			"AssetPathName": "/Game/Resources/Character/GhostLady_S1/Meshes/Characters/Separates/Hands/SK_Hand_L.SK_Hand_L",
+			"SubPathString": ""
+		}
+	},
+	{
+		"Name": "31001",
+		"PartsType": "PT_Glove",
+		"MeshPath":
+		{
+			"AssetPathName": "/Game/Resources/Character/GhostLady_S1/Meshes/Characters/Separates/Hands/SK_GauntletB_R.SK_GauntletB_R",
+			"SubPathString": ""
+		},
+		"SetMeshPath":
+		{
+			"AssetPathName": "/Game/Resources/Character/GhostLady_S1/Meshes/Characters/Separates/Hands/SK_GauntletB_L.SK_GauntletB_L",
+			"SubPathString": ""
+		}
+	},
+	{
+		"Name": "31002",
+		"PartsType": "PT_Glove",
+		"MeshPath":
+		{
+			"AssetPathName": "/Game/Resources/Character/GhostLady_S1/Meshes/Characters/Separates/Hands/SK_GauntletA_R.SK_GauntletA_R",
+			"SubPathString": ""
+		},
+		"SetMeshPath":
+		{
+			"AssetPathName": "/Game/Resources/Character/GhostLady_S1/Meshes/Characters/Separates/Hands/SK_GauntletA_L.SK_GauntletA_L",
+			"SubPathString": ""
+		}
+	},
+	{
+		"Name": "41000",
+		"PartsType": "PT_Shoes",
+		"MeshPath":
+		{
+			"AssetPathName": "/Game/Resources/Character/GhostLady_S1/Meshes/Characters/Separates/Shoes/SK_Feet.SK_Feet",
+			"SubPathString": ""
+		},
+		"SetMeshPath":
+		{
+			"AssetPathName": "None",
+			"SubPathString": ""
+		}
+	},
+	{
+		"Name": "41001",
+		"PartsType": "PT_Shoes",
+		"MeshPath":
+		{
+			"AssetPathName": "/Game/Resources/Character/GhostLady_S1/Meshes/Characters/Separates/Shoes/SK_Shoes.SK_Shoes",
+			"SubPathString": ""
+		},
+		"SetMeshPath":
+		{
+			"AssetPathName": "None",
+			"SubPathString": ""
+		}
+	},
+	{
+		"Name": "101000",
+		"PartsType": "PT_Hair",
+		"MeshPath":
+		{
+			"AssetPathName": "/Game/Resources/Character/GhostLady_S1/Meshes/Characters/Separates/Hairs/SK_HairA.SK_HairA",
+			"SubPathString": ""
+		},
+		"SetMeshPath":
+		{
+			"AssetPathName": "None",
+			"SubPathString": ""
+		}
+	},
+	{
+		"Name": "101001",
+		"PartsType": "PT_Hair",
+		"MeshPath":
+		{
+			"AssetPathName": "/Game/Resources/Character/GhostLady_S1/Meshes/Characters/Separates/Hairs/SK_HairB.SK_HairB",
+			"SubPathString": ""
+		},
+		"SetMeshPath":
+		{
+			"AssetPathName": "None",
+			"SubPathString": ""
+		}
+	},
+	{
+		"Name": "111000",
+		"PartsType": "PT_Head",
+		"MeshPath":
+		{
+			"AssetPathName": "/Game/Resources/Character/GhostLady_S1/Meshes/Characters/Separates/Heads/SK_HeadA.SK_HeadA",
+			"SubPathString": ""
+		},
+		"SetMeshPath":
+		{
+			"AssetPathName": "None",
+			"SubPathString": ""
+		}
+	}
+]
