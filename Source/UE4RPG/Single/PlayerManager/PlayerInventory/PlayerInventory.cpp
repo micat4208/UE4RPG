@@ -3,6 +3,10 @@
 #include "Single/GameInstance/RPGGameInstance.h"
 #include "Single/PlayerManager/PlayerManager.h"
 
+#include "Actor/Character/PlayerCharacter/PlayerCharacter.h"
+
+#include "Struct/EquipItemInfo/EquipItemInfo.h"
+
 #include "Widget/WidgetController/WidgetController.h"
 #include "Widget/ClosableWnd/InventoryWnd/InventoryWnd.h"
 #include "Widget/Slot/ItemSlot/InventoryItemSlot/InventoryItemSlot.h"
@@ -13,6 +17,10 @@ UPlayerInventory::UPlayerInventory()
 	static ConstructorHelpers::FClassFinder<UInventoryWnd> BP_INVENTORY_WND(
 		TEXT("WidgetBlueprint'/Game/Blueprints/Widget/ClosableWnd/InventoryWnd/BP_InventoryWnd.BP_InventoryWnd_C'"));
 	if (BP_INVENTORY_WND.Succeeded()) BP_InventoryWnd = BP_INVENTORY_WND.Class;
+
+	static ConstructorHelpers::FObjectFinder<UDataTable> DT_EQUIP_ITEM_INFO(
+		TEXT("DataTable'/Game/Resources/DataTable/DT_EquipItemInfo.DT_EquipItemInfo'"));
+	if (DT_EQUIP_ITEM_INFO.Succeeded()) DT_EquipItemInfo = DT_EQUIP_ITEM_INFO.Object;
 
 	InventoryWnd = nullptr;
 }
@@ -56,10 +64,72 @@ void UPlayerInventory::UpdateCharacterVisual()
 	/// - TMap.GetKeys(&TArray<KeyType> outKeys) : TMap 요소의 모든 키를 배열로 반환합니다.
 	/// - outKeys : 출력용 매개 변수이며, TMap 요소들의 키를 저장시킬 배열을 전달합니다.
 	
-	// TODO
 	// 모든 파츠 비쥬얼을 갱신합니다.
+	for (EPartsType partsType : equipItemPartsTypes)
+	{
+		UpdateCharacterVisual(partsType);
+	}
+}
+
+void UPlayerInventory::UpdateCharacterVisual(EPartsType updateParts)
+{
+	// 플레이어 캐릭터가 유효하지 않을 경우 리턴
+	APlayerCharacter* playerCharacter = GetManager(UPlayerManager)->GetPlayerCharacter();
+	if (!IsValid(playerCharacter)) return;
+
+	// 플레이어 캐릭터 정보를 얻습니다.
+	FPlayerCharacterInfo* playerCharacterInfo = GetManager(UPlayerManager)->GetPlayerInfo();
+
+	// 현재 장착된 파츠중 updateParts 와 일치하는 파츠 정보를 얻습니다.
+	bool bReturnedAvilableData = false; // 반환된 데이터가 유효한 데이터임을 확인하기 위한 변수
+	TTuple<FItemSlotInfo, bool> equippedPartsData = playerCharacterInfo->GetEquippedItemSlotInfo(
+		updateParts, &bReturnedAvilableData);
+
+	// 유효한 데이터가 아니라면 return
+	if (!bReturnedAvilableData) return;
+
+	// 현재 장착된 장비 아이템 정보
+	FItemSlotInfo* equippedItemSlotInfo = &equippedPartsData.Get<0>();
+
+	// 장착된 장비 아이템이 기본 장비임을 나타냅니다.
+	bool bIsDefaultEquipItem = equippedPartsData.Get<1>();
+
+	// 유효한 데이터이나 정보가 비어있을 경우 리턴
+	if (equippedItemSlotInfo->IsEmpty()) return;
+
+	// 장비 아이템 정보를 얻습니다.
+	FString contextString;
+	FEquipItemInfo * equipItemInfo = DT_EquipItemInfo->FindRow<FEquipItemInfo>(
+		equippedItemSlotInfo->ItemCode,
+		contextString);
+
+	USkeletalMesh* loadedMesh = Cast<USkeletalMesh>(
+			GetManager(FStreamableManager)->LoadSynchronous(equipItemInfo->MeshPath));
+
+	USkeletalMesh* loadedSetMesh = nullptr;
+	if (!equipItemInfo->SetMeshPath.IsNull())
+	{
+		loadedSetMesh = Cast<USkeletalMesh>(
+			GetManager(FStreamableManager)->LoadSynchronous(equipItemInfo->SetMeshPath));
+	}
 
 
+	switch (equipItemInfo->PartsType)
+	{
+	case EPartsType::PT_Hair:
+	case EPartsType::PT_Head:
+	case EPartsType::PT_Top:
+	case EPartsType::PT_Bottom:
+	case EPartsType::PT_Shoes:
+	case EPartsType::PT_Weapon:
+		playerCharacter->GetParts()[equipItemInfo->PartsType]->SetSkeletalMesh(loadedMesh);
+		break;
+
+	case EPartsType::PT_Glove:
+		playerCharacter->GetParts()[EPartsType::PT_LeftGlove]->SetSkeletalMesh(loadedMesh);
+		playerCharacter->GetParts()[EPartsType::PT_RightGlove]->SetSkeletalMesh(loadedSetMesh);
+		break;
+	}
 }
 
 void UPlayerInventory::AddItem(FItemSlotInfo& newItemSlotInfo)

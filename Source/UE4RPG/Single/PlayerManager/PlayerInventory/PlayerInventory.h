@@ -4,6 +4,7 @@
 #include "UObject/NoExportTypes.h"
 
 #include "Enum/InputModeType.h"
+#include "Enum/PartsType.h"
 
 #include "Struct/ItemSlotInfo/ItemSlotInfo.h"
 
@@ -20,6 +21,7 @@ public :
 
 private :
 	TSubclassOf<class UInventoryWnd> BP_InventoryWnd;
+	class UDataTable* DT_EquipItemInfo;
 
 private :
 	class UInventoryWnd* InventoryWnd;
@@ -42,6 +44,9 @@ public :
 public :
 	// 플레이어 캐릭터의 비쥬얼을 갱신합니다.
 	void UpdateCharacterVisual();
+
+	// 플레이어 캐릭터의 비쥬얼을 갱신합니다.
+	void UpdateCharacterVisual(EPartsType updateParts);
 
 public :
 	// 아이템을 인벤토리에 추가합니다.

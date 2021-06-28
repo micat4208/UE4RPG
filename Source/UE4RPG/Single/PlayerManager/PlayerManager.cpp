@@ -19,6 +19,10 @@ void UPlayerManager::InitializePlayerCharacter()
 	GetPlayerCharacter()->ClearAllPartsMesh();
 
 	// 비쥬얼 갱신
+	GetPlayerInventory()->UpdateCharacterVisual();
+
+	// 마스터 포즈 연결
+	GetPlayerCharacter()->LinkMasterPose();
 
 
 }

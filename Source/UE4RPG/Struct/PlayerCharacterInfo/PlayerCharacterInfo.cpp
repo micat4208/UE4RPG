@@ -70,3 +70,39 @@ void FPlayerCharacterInfo::AddStatusAttributes(ECharacterStatusAttribute statusA
 			OnStatusAttributesChanged.Broadcast(statusAttributes, prevValue, currentValue);
 	}
 }
+
+TTuple<FItemSlotInfo, bool> FPlayerCharacterInfo::GetEquippedItemSlotInfo(
+	EPartsType partsType, bool* out_bReturnedAvilableData) const
+{
+	// Map 에 추가된 요소인지 확인
+	if (!PartsInfos.Contains(partsType) && !DefaultPartsInfos.Contains(partsType))
+	{
+		UE_LOG(LogTemp, Error,
+			TEXT("PlayerCharacterInfo.cpp :: %d LINE :: (EPartsType)[%d] is not AvailableParatsType!"),
+			__LINE__, static_cast<int8>(partsType));
+
+		if (out_bReturnedAvilableData)
+			*out_bReturnedAvilableData = false;
+		return MakeTuple(FItemSlotInfo(), false);
+	}
+
+	FItemSlotInfo equippedItemSlotInfo = PartsInfos[partsType];
+
+	// 장착된 장비 아이템이 존재하지 않는다면
+	if (equippedItemSlotInfo.IsEmpty())
+	{
+		if (out_bReturnedAvilableData)
+			*out_bReturnedAvilableData = true;
+
+		// 기본 장비 아이템 정보 반환
+		return MakeTuple(DefaultPartsInfos[partsType], true);
+	}
+	// 장착된 장비 아이템이 존재한다면
+	else
+	{
+		if (out_bReturnedAvilableData)
+			*out_bReturnedAvilableData = true;
+
+		return MakeTuple(equippedItemSlotInfo, false);
+	}
+}

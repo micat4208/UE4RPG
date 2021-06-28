@@ -57,6 +57,9 @@ public :
 	// 모든 파츠 Mesh 를 비웁니다.
 	void ClearAllPartsMesh();
 
+	// 마스터 포즈 연결
+	void LinkMasterPose();
+
 public :
 	FORCEINLINE TMap<EPartsType, class USkeletalMeshComponent*>& GetParts()
 	{ return Parts; }

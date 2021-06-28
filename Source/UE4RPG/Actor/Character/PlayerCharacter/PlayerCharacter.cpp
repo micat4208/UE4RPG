@@ -63,6 +63,15 @@ APlayerCharacter::APlayerCharacter()
 	LeftGloveMesh->SetupAttachment(HeadMesh);
 	ShoesMesh->SetupAttachment(HeadMesh);
 
+	Parts.Empty();
+	Parts.Add(EPartsType::PT_Hair, HairMesh);
+	Parts.Add(EPartsType::PT_Head, HeadMesh);
+	Parts.Add(EPartsType::PT_Top, TopMesh);
+	Parts.Add(EPartsType::PT_Bottom, BottomMesh);
+	Parts.Add(EPartsType::PT_RightGlove, RightGloveMesh);
+	Parts.Add(EPartsType::PT_LeftGlove, LeftGloveMesh);
+	Parts.Add(EPartsType::PT_Shoes, ShoesMesh);
+
 
 }
 
@@ -94,4 +103,13 @@ void APlayerCharacter::ClearAllPartsMesh()
 		if (IsValid(partsMeshComponent.Value))
 			partsMeshComponent.Value->SetSkeletalMesh(nullptr);
 	}
+}
+
+void APlayerCharacter::LinkMasterPose()
+{
+	TopMesh->SetMasterPoseComponent(HeadMesh);
+	BottomMesh->SetMasterPoseComponent(HeadMesh);
+	LeftGloveMesh->SetMasterPoseComponent(HeadMesh);
+	RightGloveMesh->SetMasterPoseComponent(HeadMesh);
+	ShoesMesh->SetMasterPoseComponent(HeadMesh);
 }

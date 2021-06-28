@@ -60,5 +60,11 @@ public :
 	// statusAttributes 에 해당하는 상태 속성의 수치에 value 를 더합니다.
 	void AddStatusAttributes(ECharacterStatusAttribute statusAttributes, float value);
 
+	// 현재 장착한 장비 아이템 정보를 얻습니다.
+	/// - 착용중인 장비 아이템이 존재한다면 착용중인 장비 아이템 정보가 반환되며,
+	///   착용중인 장비 아이템이 존재하지 않는다면 기본 아이템 정보가 반환됩니다.
+	/// - return : <장비 아이템 슬롯 정보, 반환된 아이템 정보가 기본 장비 아이템 정보임>
+	TTuple<FItemSlotInfo, bool> GetEquippedItemSlotInfo(EPartsType partsType, bool * out_bReturnedAvilableData = nullptr) const;
+
 
 };
