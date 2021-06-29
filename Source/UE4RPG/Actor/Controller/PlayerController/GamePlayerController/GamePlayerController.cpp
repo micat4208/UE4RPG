@@ -121,5 +121,5 @@ void AGamePlayerController::MouseYInput(float axis)
 
 void AGamePlayerController::OpenInventory()
 {
-	GetManager(UPlayerManager)->GetPlayerInventory()->ToggleInventoryWnd(GetWidgetController());
+	GetManager(UPlayerManager)->GetPlayerInventory()->ToggleInventoryWnd(GetWidgetController(), true);
 }

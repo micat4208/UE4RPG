@@ -32,11 +32,16 @@ public :
 	// 인벤토리 슬롯을 갱신합니다.
 	void UpdateInventoryItemSlot();
 
-	// 아이톔 개수 텍스트를 갱신합니다.
+	// 아이템 개수 텍스트를 갱신합니다.
 	void UpdateItemCountText();
+
+	// 장비 아이템을 장착합니다.
+	//void AttachToEquipItemSlot(class UPlayerEquipSlot* targetEquipSlot = nullptr);
 
 public :
 	FORCEINLINE int32 GetItemSlotIndex() const
 	{ return ItemSlotIndex; }
+
+
 	
 };

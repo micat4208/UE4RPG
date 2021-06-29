@@ -9,7 +9,10 @@
 
 #include "Widget/WidgetController/WidgetController.h"
 #include "Widget/ClosableWnd/InventoryWnd/InventoryWnd.h"
+#include "Widget/ClosableWnd/PlayerEquipmentWnd/PlayerEquipmentWnd.h"
 #include "Widget/Slot/ItemSlot/InventoryItemSlot/InventoryItemSlot.h"
+
+#include "Components/CanvasPanelSlot.h"
 
 
 UPlayerInventory::UPlayerInventory()
@@ -18,11 +21,16 @@ UPlayerInventory::UPlayerInventory()
 		TEXT("WidgetBlueprint'/Game/Blueprints/Widget/ClosableWnd/InventoryWnd/BP_InventoryWnd.BP_InventoryWnd_C'"));
 	if (BP_INVENTORY_WND.Succeeded()) BP_InventoryWnd = BP_INVENTORY_WND.Class;
 
+	static ConstructorHelpers::FClassFinder<UPlayerEquipmentWnd> BP_EQUIP_ITEM_WND(
+		TEXT("WidgetBlueprint'/Game/Blueprints/Widget/ClosableWnd/EquipItemWnd/BP_EquipItemWnd.BP_EquipItemWnd_C'"));
+	if (BP_EQUIP_ITEM_WND.Succeeded()) BP_EquipItemWnd = BP_EQUIP_ITEM_WND.Class;
+
 	static ConstructorHelpers::FObjectFinder<UDataTable> DT_EQUIP_ITEM_INFO(
 		TEXT("DataTable'/Game/Resources/DataTable/DT_EquipItemInfo.DT_EquipItemInfo'"));
 	if (DT_EQUIP_ITEM_INFO.Succeeded()) DT_EquipItemInfo = DT_EQUIP_ITEM_INFO.Object;
 
 	InventoryWnd = nullptr;
+	PlayerEquipmentWnd = nullptr;
 }
 
 UInventoryWnd* UPlayerInventory::CreateInventoryWnd(
@@ -44,16 +52,63 @@ UInventoryWnd* UPlayerInventory::CreateInventoryWnd(
 	return InventoryWnd;
 }
 
+UPlayerEquipmentWnd* UPlayerInventory::CreateEquipmentWnd(UWidgetController* const widgetController, 
+	EInputModeType changeInputMode, bool bShowCursor)
+{
+	if (IsValid(PlayerEquipmentWnd)) return PlayerEquipmentWnd;
+
+	PlayerEquipmentWnd = Cast<UPlayerEquipmentWnd>(
+		widgetController->CreateWnd(BP_EquipItemWnd, true, false, changeInputMode, bShowCursor));
+
+	PlayerEquipmentWnd->OnWndClosed.AddLambda([this]()
+		{ PlayerEquipmentWnd = nullptr; });
+
+	// 인벤토리 창이 열려있다면 인벤토리 창 우측으로 배치합니다.
+	if (IsValid(InventoryWnd))
+	{
+		FVector2D inventoryHalfSize = InventoryWnd->WndSize * 0.5f;
+		FVector2D inventoryWndPos = InventoryWnd->GetCanvasPanelSlot()->GetPosition();
+
+		FVector2D equipmentWndHalfSize = PlayerEquipmentWnd->WndSize * 0.5f;
+		FVector2D equipmentWndPos =
+			inventoryWndPos + (inventoryHalfSize + equipmentWndHalfSize) * FVector2D(-1.0f, 0.0f);
+
+		equipmentWndPos.Y += equipmentWndHalfSize.Y - inventoryHalfSize.Y;
+		PlayerEquipmentWnd->GetCanvasPanelSlot()->SetPosition(equipmentWndPos);
+	}
+
+	return PlayerEquipmentWnd;
+}
+
 void UPlayerInventory::CloseInventoryWnd()
 {
 	if (IsValid(InventoryWnd))
 		InventoryWnd->CloseThisWnd();
 }
 
-void UPlayerInventory::ToggleInventoryWnd(UWidgetController* widgetController)
+void UPlayerInventory::CloseEquipmentWnd()
 {
-	if (IsValid(InventoryWnd)) CloseInventoryWnd();
-	else CreateInventoryWnd(widgetController, EInputModeType::IM_GameAndUI, true);
+	if (IsValid(PlayerEquipmentWnd))
+	{
+		PlayerEquipmentWnd->CloseThisWnd();
+		PlayerEquipmentWnd = nullptr;
+	}
+}
+
+void UPlayerInventory::ToggleInventoryWnd(UWidgetController* widgetController, bool bOpenEquipmentWnd)
+{
+	if (IsValid(InventoryWnd))
+	{
+		CloseInventoryWnd();
+		CloseEquipmentWnd();
+	}
+	else
+	{
+		CreateInventoryWnd(widgetController, EInputModeType::IM_GameAndUI, true);
+
+		if (bOpenEquipmentWnd)
+			CreateEquipmentWnd(widgetController, EInputModeType::IM_GameAndUI, true);
+	}
 }
 
 void UPlayerInventory::UpdateCharacterVisual()
