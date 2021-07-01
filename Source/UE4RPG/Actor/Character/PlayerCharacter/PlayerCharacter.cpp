@@ -5,6 +5,11 @@
 #include "Component/ZoomableSpringArm/ZoomableSpringArmComponent.h"
 #include "Component/CharacterMovementHelper/CharacterMovementHelperComponent.h"
 #include "Component/PlayerInteract/PlayerInteractComponent.h"
+#include "Component/SkillController/SkillControllerComponent.h"
+
+
+
+
 
 APlayerCharacter::APlayerCharacter()
 {
@@ -20,6 +25,7 @@ APlayerCharacter::APlayerCharacter()
 	SpringArm = CreateDefaultSubobject<UZoomableSpringArmComponent>(TEXT("SPRING_ARM_COMPONENT"));
 	CharacterMovementHelper = CreateDefaultSubobject<UCharacterMovementHelperComponent>(TEXT("CHARACTER_MOVEMENT_HELPER"));
 	PlayerInteract = CreateDefaultSubobject<UPlayerInteractComponent>(TEXT("PLAYER_INTERACT_COMPONENT"));
+	SkillController = CreateDefaultSubobject<USkillControllerComponent>(TEXT("SKILL_CONTROLLER"));
 
 	HeadMesh		= GetMesh();
 	HairMesh		= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SK_HAIR"));

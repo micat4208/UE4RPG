@@ -27,6 +27,9 @@ private :
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	class UPlayerInteractComponent * PlayerInteract;
 
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	class USkillControllerComponent * SkillController;
+
 protected :
 	UPROPERTY()
 	TMap<EPartsType, class USkeletalMeshComponent*> Parts;
@@ -70,5 +73,7 @@ public :
 	FORCEINLINE class UPlayerInteractComponent* GetPlayerInteract() const
 	{ return PlayerInteract; }
 
+	FORCEINLINE class USkillControllerComponent* GetSkillController() const
+	{ return SkillController; }
 
 };

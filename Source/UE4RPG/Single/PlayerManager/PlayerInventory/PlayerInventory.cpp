@@ -191,8 +191,10 @@ void UPlayerInventory::UpdateCharacterVisual(EPartsType updateParts)
 		playerCharacter->GetParts()[EPartsType::PT_LeftGlove]->SetRelativeLocation(equipItemInfo->RelativeLocation);
 		playerCharacter->GetParts()[EPartsType::PT_RightGlove]->SetRelativeLocation(equipItemInfo->RelativeLocation);
 	}
+	else if (equipItemInfo->PartsType == EPartsType::PT_Head) return;
 	else
 	{
+
 		// 상대 위치 설정
 		playerCharacter->GetParts()[equipItemInfo->PartsType]->SetRelativeLocation(equipItemInfo->RelativeLocation);
 	}
@@ -408,4 +410,31 @@ void UPlayerInventory::EquipItem(FName equipItemCode)
 
 	// 비쥬얼 갱신
 	UpdateCharacterVisual(equipItemInfo->PartsType);
+}
+
+void UPlayerInventory::DismountItem(EPartsType partsType, FItemSlotInfo* out_ItemSlotInfo)
+{
+
+	// 이전에 장착된 아이템 정보를 얻습니다.
+	bool bReturnedAvilableData;
+	TTuple<FItemSlotInfo, bool> prevEquipItemData = GetManager(UPlayerManager)->GetPlayerInfo()->
+		GetEquippedItemSlotInfo(partsType, &bReturnedAvilableData);
+
+	// 이전에 장착된 아이템 정보를 얻습니다.
+	if (out_ItemSlotInfo)
+	{
+		// 이전에 장착된 장비가 존재하지 않는다면
+		/// - (기본 장비라면 이전에 장착된 장비 아이템이 존재하지 않음)
+		if (prevEquipItemData.Get<1>())
+			*out_ItemSlotInfo = FItemSlotInfo();
+
+		// 이전에 장착된 장비가 존재한다면, 장비 정보를 반환합니다.
+		else *out_ItemSlotInfo = prevEquipItemData.Get<0>();
+	}
+
+	// 장비 아이템 해제
+	GetManager(UPlayerManager)->GetPlayerInfo()->PartsInfos[partsType] = FItemSlotInfo();
+
+	// 비쥬얼 갱신
+	UpdateCharacterVisual(partsType);
 }

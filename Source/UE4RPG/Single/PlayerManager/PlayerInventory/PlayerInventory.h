@@ -78,6 +78,11 @@ public :
 	// 장비 아이템을 장착합니다.
 	void EquipItem(FName equipItemCode);
 
+	// 장비 아이템을 장착 해제시킵니다.
+	// partsType : 장착 해제시키려는 파츠를 전달합니다.
+	// out_ItemSlotInfo : 이전에 장착시킨 아이템 정보를 전달받을 ItemSlotInfo 를 나타냅니다.
+	void DismountItem(EPartsType partsType, FItemSlotInfo* out_ItemSlotInfo = nullptr);
+
 public :
 	FORCEINLINE class UInventoryWnd* GetInventoryWnd() const
 	{ return InventoryWnd; }
