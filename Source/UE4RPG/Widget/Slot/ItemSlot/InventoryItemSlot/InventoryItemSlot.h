@@ -36,7 +36,7 @@ public :
 	void UpdateItemCountText();
 
 	// 장비 아이템을 장착합니다.
-	//void AttachToEquipItemSlot(class UPlayerEquipSlot* targetEquipSlot = nullptr);
+	void AttachToEquipItemSlot();
 
 public :
 	FORCEINLINE int32 GetItemSlotIndex() const

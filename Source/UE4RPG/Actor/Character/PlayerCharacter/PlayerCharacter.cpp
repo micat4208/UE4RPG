@@ -107,6 +107,8 @@ void APlayerCharacter::ClearAllPartsMesh()
 
 void APlayerCharacter::LinkMasterPose()
 {
+	HairMesh->AttachToComponent(HeadMesh, FAttachmentTransformRules::KeepRelativeTransform, FName(TEXT("Socket_Hair")));
+
 	TopMesh->SetMasterPoseComponent(HeadMesh);
 	BottomMesh->SetMasterPoseComponent(HeadMesh);
 	LeftGloveMesh->SetMasterPoseComponent(HeadMesh);

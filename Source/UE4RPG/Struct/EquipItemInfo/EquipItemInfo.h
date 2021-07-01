@@ -16,14 +16,18 @@ struct UE4RPG_API FEquipItemInfo :
 
 public:
 	// 장착 가능 부위
-	UPROPERTY(EditAnywhere, BlueprintType)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EPartsType PartsType;
 
 	// Mesh 경로
-	UPROPERTY(EditAnywhere, BlueprintType)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FSoftObjectPath MeshPath;
 
 	// 함께 사용되는 Mesh 경로
-	UPROPERTY(EditAnywhere, BlueprintType)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FSoftObjectPath SetMeshPath;
+
+	// 장착 시 상대 위치
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector RelativeLocation;
 };

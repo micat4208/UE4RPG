@@ -35,3 +35,9 @@ void UPlayerEquipSlot::NativePreConstruct()
 
 	Text_PartsName->SetText(FText::FromString(partsText));
 }
+
+void UPlayerEquipSlot::UpdateEquipSlot(FItemSlotInfo& itemSlotInfo)
+{
+	SetItemInfo(itemSlotInfo.ItemCode);
+	UpdateItemImage();
+}

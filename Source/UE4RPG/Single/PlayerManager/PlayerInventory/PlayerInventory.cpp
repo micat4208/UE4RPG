@@ -185,6 +185,18 @@ void UPlayerInventory::UpdateCharacterVisual(EPartsType updateParts)
 		playerCharacter->GetParts()[EPartsType::PT_RightGlove]->SetSkeletalMesh(loadedSetMesh);
 		break;
 	}
+
+	if (equipItemInfo->PartsType == EPartsType::PT_Glove)
+	{
+		playerCharacter->GetParts()[EPartsType::PT_LeftGlove]->SetRelativeLocation(equipItemInfo->RelativeLocation);
+		playerCharacter->GetParts()[EPartsType::PT_RightGlove]->SetRelativeLocation(equipItemInfo->RelativeLocation);
+	}
+	else
+	{
+		// 상대 위치 설정
+		playerCharacter->GetParts()[equipItemInfo->PartsType]->SetRelativeLocation(equipItemInfo->RelativeLocation);
+	}
+
 }
 
 void UPlayerInventory::AddItem(FItemSlotInfo& newItemSlotInfo)
@@ -369,4 +381,31 @@ void UPlayerInventory::RemoveItem(int32 itemSlotIndex, int32 removeCount)
 
 
 
+}
+
+void UPlayerInventory::EquipItem(FName equipItemCode)
+{
+	// 장비 아이템 정보를 얻습니다.
+	FString contextString;
+	FEquipItemInfo* equipItemInfo = DT_EquipItemInfo->FindRow<FEquipItemInfo>(
+		equipItemCode, contextString);
+
+	if (equipItemCode.IsNone())
+	{
+		UE_LOG(LogTemp, Error, TEXT("PlayerInventory.cpp :: %d LINE :: equipItemCode is None!"), __LINE__);
+		return;
+	}
+	else if (equipItemInfo == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("PlayerInventory.cpp :: %d LINE :: equipItemInfo is nullptr! (equipItemCode = %s) "),
+			__LINE__, *equipItemCode.ToString());
+		return;
+	}
+
+	// 장비 아이템 장착
+	GetManager(UPlayerManager)->GetPlayerInfo()->PartsInfos[equipItemInfo->PartsType] =
+		FItemSlotInfo(equipItemCode, 1, 1);
+
+	// 비쥬얼 갱신
+	UpdateCharacterVisual(equipItemInfo->PartsType);
 }

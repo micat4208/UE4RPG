@@ -6,6 +6,8 @@
 #include "Actor/Controller/PlayerController/BasePlayerController.h"
 
 #include "Widget/ClosableWnd/InventoryWnd/InventoryWnd.h"
+#include "Widget/ClosableWnd/PlayerEquipmentWnd/PlayerEquipmentWnd.h"
+#include "Widget/Slot/ItemSlot/PlayerEquipSlot/PlayerEquipSlot.h"
 
 #include "Component/PlayerBehaviorBroadcast/PlayerBehaviorBroadcastComponent.h"
 #include "Components/Image.h"
@@ -82,6 +84,18 @@ void UInventoryItemSlot::NativeConstruct()
 				GetManager(UPlayerManager)->GetPlayerController()->GetPlayerBehaviorBroadcast()->UseInventoryItem(
 					GetItemSlotIndex());
 		});
+
+	// 우클릭 시 장비 아이템을 장착 시킵니다.
+	OnMouseRightButtonClickedEvent.AddUObject(this, &UInventoryItemSlot::AttachToEquipItemSlot);
+	/// - AddUObject  : 이벤트나, 멀티캐스트 델리게이트에 UObject 멤버 함수를 바인딩시킵니다.
+	/// - BindUObject : 싱글캐스트 델리게이트에 UObject 멤버 함수를 바인딩시킵니다.
+	/// - AddDyanmic  : 이벤트나, 다이나믹 멀티캐스트 델리게이트에 UObject 멤버 함수를 바인딩시킵니다.
+	/// - AddLambda	  : 이벤트나, 멀티캐스트 델리게이트에 람다문을 바인딩시킵니다.
+	/// - BindLambda  : 싱글캐스트 델리게이트에 람다문을 바인딩시킵니다.
+	/// 
+	/// - UObject (언리얼 오브젝트) : 언리얼 엔진의 관리를 받는 객체를 나타냅니다.
+	///   부모 클래스가 UObject 로 되어있음.
+	///   UCLASS() 를 작성.
 }
 
 void UInventoryItemSlot::InitializeSlot(ESlotType slotType, FName itemCode, int32 itemSlotIndex)
@@ -106,4 +120,36 @@ void UInventoryItemSlot::UpdateItemCountText()
 		InventoryItemInfos[ItemSlotIndex];
 
 	SetSlotItemCount(itemSlotInfo.ItemCount);
+}
+
+void UInventoryItemSlot::AttachToEquipItemSlot()
+{
+	// 상점을 이용중이라면 장착되지 않도록 합니다.
+	if (InventoryWnd->bIsTradeMode) return;
+
+
+	// 아이템 정보
+	FItemInfo* itemInfo = GetItemInfo();
+
+	// 만약 해당 슬롯에 아이템이 존재하지 않는다면 실행 X
+	if (itemInfo->IsEmpty()) return;
+
+	// 만약 해당 아이템이 장비 아이템이 아니라면 실행 X
+	if (itemInfo->ItemType != EItemType::Equipment) return;
+
+
+	// PlayerInventory 객체를 얻습니다.
+	UPlayerInventory* playerInventory = GetManager(UPlayerManager)->GetPlayerInventory();
+
+	// 장비 창을 얻습니다.
+	UPlayerEquipmentWnd* equipmentWnd = playerInventory->GetPlayerEquipmentWnd();
+
+	// 아이템 장착
+	playerInventory->EquipItem(itemInfo->ItemCode);
+
+	// 해당 슬롯을 비웁니다.
+	playerInventory->RemoveItem(ItemSlotIndex);
+
+	// 장비창을 갱신합니다.
+	equipmentWnd->UpdatePartsSlots();
 }

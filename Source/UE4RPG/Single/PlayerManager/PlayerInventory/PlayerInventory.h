@@ -75,8 +75,14 @@ public :
 	// 인벤토리 아이템을 합칩니다.
 	void MergeItem(class UInventoryItemSlot* ori, class UInventoryItemSlot* target);
 
+	// 장비 아이템을 장착합니다.
+	void EquipItem(FName equipItemCode);
+
 public :
 	FORCEINLINE class UInventoryWnd* GetInventoryWnd() const
 	{ return InventoryWnd; }
+
+	FORCEINLINE class UPlayerEquipmentWnd* GetPlayerEquipmentWnd() const
+	{ return PlayerEquipmentWnd; }
 	
 };
