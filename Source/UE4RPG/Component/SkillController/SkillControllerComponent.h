@@ -7,6 +7,9 @@
 
 #include "SkillControllerComponent.generated.h"
 
+#ifndef MAX_SKILL_QUEUE_SIZE
+#define MAX_SKILL_QUEUE_SIZE	2
+#endif
 
 UCLASS()
 class UE4RPG_API USkillControllerComponent : public UActorComponent
@@ -14,6 +17,11 @@ class UE4RPG_API USkillControllerComponent : public UActorComponent
 	GENERATED_BODY()
 
 private :
+	class UDataTable* DT_SkillInfo;
+
+private :
+	class APlayerCharacter* PlayerCharacter;
+
 	// 실행중인 스킬 정보를 나타냅니다.
 	FSkillInfo* CurrentSkillInfo;
 
@@ -35,6 +43,13 @@ protected:
 
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+public :
+	// 스킬 시전을 요청합니다.
+	void RequestSkill(FName skillCode);
+
+	// 스킬이 끝났음을 알립니다.
+	void SkillFinished();
 
 private :
 	// 스킬을 순서대로 처리합니다.

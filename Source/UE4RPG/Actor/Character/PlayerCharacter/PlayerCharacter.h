@@ -48,6 +48,8 @@ protected :
 	class USkeletalMeshComponent* LeftGloveMesh;
 	UPROPERTY(VisibleAnywhere)
 	class USkeletalMeshComponent* ShoesMesh;
+	UPROPERTY(VisibleAnywhere)
+	class USkeletalMeshComponent* WeaponMesh;
 
 
 public :
@@ -62,6 +64,10 @@ public :
 
 	// 마스터 포즈 연결
 	void LinkMasterPose();
+
+private :
+	// 기본 공격 메서드
+	void RegularAttack();
 
 public :
 	FORCEINLINE TMap<EPartsType, class USkeletalMeshComponent*>& GetParts()

@@ -20,5 +20,8 @@ protected :
 public :
 	virtual void NativeUpdateAnimation(float dt) override;
 
+	UFUNCTION()
+	void AnimNotify_SkillFinish();
+
 	
 };

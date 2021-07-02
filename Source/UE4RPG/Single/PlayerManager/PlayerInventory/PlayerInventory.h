@@ -89,5 +89,8 @@ public :
 
 	FORCEINLINE class UPlayerEquipmentWnd* GetPlayerEquipmentWnd() const
 	{ return PlayerEquipmentWnd; }
+
+	// 무기 장착 상태를 반환합니다.
+	bool IsEquippedWeapon() const;
 	
 };

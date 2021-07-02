@@ -438,3 +438,8 @@ void UPlayerInventory::DismountItem(EPartsType partsType, FItemSlotInfo* out_Ite
 	// ºñÁê¾ó °»½Å
 	UpdateCharacterVisual(partsType);
 }
+
+bool UPlayerInventory::IsEquippedWeapon() const
+{
+	return !GetManager(UPlayerManager)->GetPlayerInfo()->PartsInfos[EPartsType::PT_Weapon].IsEmpty();
+}

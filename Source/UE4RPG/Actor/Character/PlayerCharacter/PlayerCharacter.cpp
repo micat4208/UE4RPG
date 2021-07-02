@@ -34,6 +34,7 @@ APlayerCharacter::APlayerCharacter()
 	RightGloveMesh	= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SK_RGLOVE"));
 	LeftGloveMesh	= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SK_LGLOVE"));
 	ShoesMesh		= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SK_SHOES"));
+	WeaponMesh		= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SK_WEAPON"));
 
 	SpringArm->SetupAttachment(GetRootComponent());
 	Camera->SetupAttachment(SpringArm);
@@ -68,6 +69,7 @@ APlayerCharacter::APlayerCharacter()
 	RightGloveMesh->SetupAttachment(HeadMesh);
 	LeftGloveMesh->SetupAttachment(HeadMesh);
 	ShoesMesh->SetupAttachment(HeadMesh);
+	WeaponMesh->SetupAttachment(HeadMesh);
 
 	Parts.Empty();
 	Parts.Add(EPartsType::PT_Hair, HairMesh);
@@ -77,6 +79,7 @@ APlayerCharacter::APlayerCharacter()
 	Parts.Add(EPartsType::PT_RightGlove, RightGloveMesh);
 	Parts.Add(EPartsType::PT_LeftGlove, LeftGloveMesh);
 	Parts.Add(EPartsType::PT_Shoes, ShoesMesh);
+	Parts.Add(EPartsType::PT_Weapon, WeaponMesh);
 
 
 }
@@ -92,6 +95,11 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 	PlayerInputComponent->BindAction(TEXT("Interact"), EInputEvent::IE_Pressed,
 		PlayerInteract, &UPlayerInteractComponent::TryInteraction);
+
+	PlayerInputComponent->BindAction(TEXT("RegularAttack"), EInputEvent::IE_Pressed,
+		this, &APlayerCharacter::RegularAttack);
+
+
 
 	PlayerInputComponent->BindAxis(TEXT("MouseWheel"), SpringArm, &UZoomableSpringArmComponent::ZoomCamera);
 
@@ -114,10 +122,16 @@ void APlayerCharacter::ClearAllPartsMesh()
 void APlayerCharacter::LinkMasterPose()
 {
 	HairMesh->AttachToComponent(HeadMesh, FAttachmentTransformRules::KeepRelativeTransform, FName(TEXT("Socket_Hair")));
+	WeaponMesh->AttachToComponent(HeadMesh, FAttachmentTransformRules::KeepRelativeTransform, FName(TEXT("Socket_WeaponR")));
 
 	TopMesh->SetMasterPoseComponent(HeadMesh);
 	BottomMesh->SetMasterPoseComponent(HeadMesh);
 	LeftGloveMesh->SetMasterPoseComponent(HeadMesh);
 	RightGloveMesh->SetMasterPoseComponent(HeadMesh);
 	ShoesMesh->SetMasterPoseComponent(HeadMesh);
+}
+
+void APlayerCharacter::RegularAttack()
+{
+	SkillController->RequestSkill(FName(TEXT("1000")));
 }

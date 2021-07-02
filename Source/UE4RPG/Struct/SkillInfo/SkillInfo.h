@@ -20,6 +20,11 @@ public :
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FText SkillName;
 
+	// 무기와 함께 사용 가능한 스킬임을 나타냅니다.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bCanBeUsedWithWeapon;
+
+
 	// AnimMontage
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UAnimMontage* AnimMontage;
