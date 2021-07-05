@@ -28,4 +28,6 @@ public :
 	// AnimMontage
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UAnimMontage* AnimMontage;
+
+
 };

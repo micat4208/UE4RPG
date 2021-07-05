@@ -32,6 +32,7 @@ void AEnemyCharacter::BeginPlay()
 
 	InitializeEnemyCharacter();
 
+	Tags.Add(TEXT("Enemy"));
 }
 
 void AEnemyCharacter::InitializeEnemyCharacter()

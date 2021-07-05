@@ -51,6 +51,9 @@ public :
 	// 스킬이 끝났음을 알립니다.
 	void SkillFinished();
 
+	// 스킬 범위를 생성합니다.
+	void CreateSkillRange();
+
 private :
 	// 스킬을 순서대로 처리합니다.
 	void SkillProcedure();

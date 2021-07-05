@@ -30,8 +30,8 @@ EBTNodeResult::Type UBTTask_MoveToPlayer::ExecuteTask(
 		playerCharacter->GetActorLocation());
 
 
-	LOG(TEXT("TargetPositiop = %s"), 
-		*enemyController->GetBlackboardComponent()->GetValueAsVector(FName(TEXT("TargetPosition"))).ToString());
+	//LOG(TEXT("TargetPositiop = %s"), 
+	//	*enemyController->GetBlackboardComponent()->GetValueAsVector(FName(TEXT("TargetPosition"))).ToString());
 
 	// 행동 성공
 	return Succeeded;

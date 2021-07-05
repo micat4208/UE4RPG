@@ -23,5 +23,7 @@ public :
 	UFUNCTION()
 	void AnimNotify_SkillFinish();
 
+	UFUNCTION()
+	void AnimNotify_ActiveSkillRange();
 	
 };

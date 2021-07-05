@@ -67,6 +67,49 @@ void USkillControllerComponent::SkillFinished()
 
 }
 
+void USkillControllerComponent::CreateSkillRange()
+{
+	if (!CurrentSkillInfo) return;
+
+	FVector tracingStart = PlayerCharacter->GetActorLocation();
+	FVector tracingEnd = tracingStart + (PlayerCharacter->GetActorForwardVector() * 200.0f);
+
+	TArray<AActor*> ActorsToIgnore;
+	ActorsToIgnore.Add(PlayerCharacter);
+
+	// 감지 결과를 저장할 배열
+	TArray<FHitResult> hitResults;
+
+	UKismetSystemLibrary::SphereTraceMultiByProfile(
+		GetWorld(),
+		tracingStart, tracingEnd,
+		100.0f,
+		FName(TEXT("PlayerSkill")),
+		true,
+		ActorsToIgnore, EDrawDebugTrace::ForDuration,
+		hitResults,
+		true);
+
+	// 감지된 객체가 존재한다면
+	if (hitResults.Num() > 0)
+	{
+		for (FHitResult hit : hitResults)
+		{
+			// 감지된 액터가 적이라면
+			if (hit.Actor->ActorHasTag(TEXT("Enemy")))
+			{
+				// 대미지 가하기
+				LOG(TEXT("Enemy!!"));
+			}
+		}
+	}
+
+
+
+
+
+}
+
 void USkillControllerComponent::SkillProcedure()
 {
 	// 현재 실행중인 스킬이 존재한다면 실행 X

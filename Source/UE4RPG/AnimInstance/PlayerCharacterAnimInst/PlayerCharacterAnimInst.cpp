@@ -21,3 +21,9 @@ void UPlayerCharacterAnimInst::AnimNotify_SkillFinish()
 
 	Owner->GetSkillController()->SkillFinished();
 }
+
+void UPlayerCharacterAnimInst::AnimNotify_ActiveSkillRange()
+{
+	if (!IsValid(Owner)) return;
+	Owner->GetSkillController()->CreateSkillRange();
+}
